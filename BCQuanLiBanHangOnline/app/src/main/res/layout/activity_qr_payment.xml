@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f9fa"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- QR Code Container -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quét mã để thanh toán"
+                android:textColor="#333"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mở ứng dụng ngân hàng hoặc ví điện tử để quét mã QR và hoàn tất thanh toán"
+                android:textColor="#666"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- QR Code Image -->
+            <ImageView
+                android:id="@+id/ivQRCode"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:src="@drawable/qr_code_placeholder"
+                android:layout_marginTop="32dp"
+                android:background="@color/white" />
+
+            <!-- Timer -->
+            <TextView
+                android:id="@+id/tvTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14:32"
+                android:textColor="#e53935"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/timer_bg"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp">
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/btnCancelPayment"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="Hủy thanh toán"
+            android:textColor="#666"
+            android:background="@drawable/button_outline"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Confirm Payment Button -->
+        <Button
+            android:id="@+id/btnPaymentDone"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="✔ Tôi đã thanh toán"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_primary"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
