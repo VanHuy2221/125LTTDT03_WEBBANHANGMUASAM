@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BCQuanLiBanHangOnline">
         <activity
-            android:name=".CreProActivity"
+            android:name=".SearchListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ProductConfigActivity" />
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".QRPaymentActivity" />
+        <activity android:name=".PaymentSuccessActivity" />
     </application>
 
 </manifest>

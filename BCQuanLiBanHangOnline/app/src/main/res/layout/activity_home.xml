@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Header Container bao gồm cả header và search bar -->
+    <LinearLayout
+        android:id="@+id/header_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#D87820"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Header -->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/app_name"
+                android:layout_width="200dp"
+                android:layout_height="70dp"
+                android:src="@drawable/orange_shop"/>
+
+            <ImageView
+                android:id="@+id/notification_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_bell"
+                app:tint="#FFFFFF"
+                android:layout_marginStart="100dp"/>
+
+            <TextView
+                android:id="@+id/notification_count"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:text="3"
+                android:textColor="#fff"
+                android:textSize="8sp"
+                android:background="@drawable/circle_red"
+                android:gravity="center"
+                android:padding="0dp"
+                android:layout_marginStart="-8dp"
+                android:layout_marginTop="-12dp"/>
+
+            <ImageView
+                android:id="@+id/cart_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_cart"
+                android:layout_marginStart="16dp"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/notification_count"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:text="2"
+                android:textColor="#fff"
+                android:textSize="8sp"
+                android:background="@drawable/circle_red"
+                android:gravity="center"
+                android:padding="0dp"
+                android:layout_marginStart="-8dp"
+                android:layout_marginTop="-12dp"/>
+        </LinearLayout>
+
+        <!-- Search Bar -->
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:hint="Tìm kiếm sản phẩm..."
+            android:background="@drawable/search_bg_rounded"
+            android:paddingStart="44dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:drawableStart="@drawable/ic_search_scaled"
+            android:drawablePadding="8dp"
+            android:drawableTint="#666666"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:textColorHint="#666666"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
+
+    <!-- ScrollView chính - ĐÃ SỬA CÓ THỂ CUỘN -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/header_container"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Banner Sale ĐƠN GIẢN -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#FF6B35"
+                android:orientation="horizontal"
+                android:layout_margin="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/banner_ad_1"/>
+            </LinearLayout>
+
+            <!-- Danh mục với Xem tất cả -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Danh mục"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem tất cả"
+                    android:textSize="14sp"
+                    android:textColor="#2196F3"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <!-- 4 Danh mục -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:padding="16dp">
+
+                <!-- Điện thoại -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_smartphone"
+                         app:tint="#2196F3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Điện thoại"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <!-- Laptop -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_laptop"
+                         app:tint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Laptop"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <!-- Thời trang -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_fashion"
+                         app:tint="#FF9800" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thời trang"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <!-- Gia dụng -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_home"
+                         app:tint="#9C27B0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gia dụng"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Sản phẩm nổi bật -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sản phẩm nổi bật"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem tất cả"
+                    android:textSize="14sp"
+                    android:textColor="#2196F3"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <!-- 2 sản phẩm nổi bật -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <!-- iPhone 14 Pro Max -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="280dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:padding="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@drawable/iphone_14_pro_max"
+                            android:scaleType="centerCrop"
+                            android:background="#F5F5F5"
+                            android:contentDescription="iPhone 14 Pro Max"
+                            android:layout_marginBottom="12dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="iPhone 14 Pro Max 128GB"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingExtra="2dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="25.990.000đ"
+                            android:textColor="#FF0000"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="★★★★"
+                                android:textSize="13sp"
+                                android:textColor="#FF9800"
+                                android:layout_marginLeft="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(4.5)"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginStart="4dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Samsung Galaxy S23 Ultra -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="280dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:padding="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@drawable/samsung_s23_ultra"
+                            android:scaleType="centerCrop"
+                            android:background="#F5F5F5"
+                            android:contentDescription="Samsung Galaxy S23 Ultra"
+                            android:layout_marginBottom="12dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Samsung Galaxy S23 Ultra 256GB"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingExtra="2dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="22.990.000đ"
+                            android:textColor="#FF0000"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="★★★★"
+                                android:textSize="13sp"
+                                android:textColor="#FF9800"
+                                android:layout_marginLeft="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(4.0)"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginStart="4dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Sản phẩm đề xuất -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sản phẩm đề xuất"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem tất cả"
+                    android:textSize="14sp"
+                    android:textColor="#2196F3"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <!-- 2 sản phẩm đề xuất -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <!-- Airpod Pro 2 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="280dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:padding="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@drawable/airpods_pro_2"
+                            android:scaleType="centerCrop"
+                            android:background="#F5F5F5"
+                            android:contentDescription="iPhone 14 Pro Max"
+                            android:layout_marginBottom="12dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Airpod Pro 2 - Tai nghe không dây bluetooth"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingExtra="2dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="5.990.000đ"
+                            android:textColor="#FF0000"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="★★★★★"
+                                android:textSize="13sp"
+                                android:textColor="#FF9800"
+                                android:layout_marginLeft="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(5.0)"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginStart="4dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Apple Watch 8 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="280dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:padding="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@drawable/apple_watch_8"
+                            android:scaleType="centerCrop"
+                            android:background="#F5F5F5"
+                            android:contentDescription="Samsung Galaxy S23 Ultra"
+                            android:layout_marginBottom="12dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Apple Watch 8 - Đồng hồ đeo tay thông minh"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingExtra="2dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="10.990.000đ"
+                            android:textColor="#FF0000"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="★★★★"
+                                android:textSize="13sp"
+                                android:textColor="#FF9800"
+                                android:layout_marginLeft="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(4.5)"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginStart="4dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_nav_menu"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
