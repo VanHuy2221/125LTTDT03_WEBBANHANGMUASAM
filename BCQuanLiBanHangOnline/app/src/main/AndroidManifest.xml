@@ -30,6 +30,10 @@
         <activity android:name=".ChatDetailActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ReviewActivity" />
+        <activity android:name=".SearchListActivity" />
+        <activity android:name=".OrderTrackingActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".CartActivity" />
     </application>
 
 </manifest>
