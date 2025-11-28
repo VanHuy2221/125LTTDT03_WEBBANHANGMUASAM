@@ -1,5 +1,6 @@
 package com.example.bc_quanlibanhangonline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +14,22 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class ProfileActivity extends AppCompatActivity {
 
     LinearLayout menuContainer;
-
+    private BottomNavigationView bottomNav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
+
+        bottomNav = findViewById(R.id.bottom_nav);
+
+        // Xử lý sự kiện bottom navigation
+        setupBottomNavigation();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -65,6 +73,33 @@ public class ProfileActivity extends AppCompatActivity {
         // Add divider
         View divider = getLayoutInflater().inflate(R.layout.divider_item, menuContainer, false);
         menuContainer.addView(divider);
+    }
+
+    private void setupBottomNavigation() {
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_account) {
+                // Đã ở Home rồi nên không cần làm gì
+                return true;
+            } else if (itemId == R.id.nav_home) {
+                // Chuyển đến OrderTrackingActivity
+                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_order) {
+                // Chuyển đến CartActivity
+                Intent intent = new Intent(ProfileActivity.this, OrderTrackingActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_cart) {
+                // Chuyển đến AccountActivity
+                Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
     }
 }
 

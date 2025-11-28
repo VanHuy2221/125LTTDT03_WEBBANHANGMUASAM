@@ -11,6 +11,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Back Button -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/back_button_bg"
+            android:scaleType="centerInside"
+            android:padding="12dp"
+            android:elevation="2dp"
+            android:contentDescription="Back" />
+
         <!-- Order Summary -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

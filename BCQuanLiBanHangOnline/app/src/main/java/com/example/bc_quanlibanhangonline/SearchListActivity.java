@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,9 @@ public class SearchListActivity extends AppCompatActivity {
         setupBrands();
         setupRecentSearches();
         setupProducts();
+
+        // THÊM SỰ KIỆN BACK
+        setupBackButton();
     }
 
     private void initViews() {
@@ -37,6 +41,20 @@ public class SearchListActivity extends AppCompatActivity {
         chipGroupBrands = findViewById(R.id.chipGroupBrands);
         chipGroupRecent = findViewById(R.id.chipGroupRecent);
         layoutProducts = findViewById(R.id.layoutProducts);
+    }
+
+    private void setupBackButton() {
+        // Tìm nút back và thêm sự kiện
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Quay về HomeActivity
+                    finish();
+                }
+            });
+        }
     }
 
     private void setupCategories() {

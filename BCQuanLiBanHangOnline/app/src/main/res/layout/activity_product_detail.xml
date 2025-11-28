@@ -10,6 +10,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Back Button -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/back_button_bg"
+            android:scaleType="centerInside"
+            android:padding="12dp"
+            android:elevation="4dp"
+            android:contentDescription="Back" />
+
         <!-- Product Image Section -->
         <ImageView
             android:id="@+id/productImage"

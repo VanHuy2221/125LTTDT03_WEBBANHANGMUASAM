@@ -2,6 +2,7 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +14,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private Button btnAddToCart, btnBuyNow;
     private TextView productName, productPrice, productDescription;
-    private ImageView productImage;
+    private ImageView productImage, btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.productPrice);
         productDescription = findViewById(R.id.productDescription);
         productImage = findViewById(R.id.productImage);
+
+        // THÊM NÚT BACK
+        btnBack = findViewById(R.id.btnBack);
     }
 
     private void loadProductData() {
@@ -54,6 +58,20 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void setupEventListeners() {
+        // NÚT BACK - QUAY VỀ HOME ACTIVITY
+        if (btnBack != null) {
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Tạo Intent quay về HomeActivity
+                    Intent intent = new Intent(ProductDetailActivity.this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish(); // Đóng Activity hiện tại
+                }
+            });
+        }
+
         btnAddToCart.setOnClickListener(v -> addToCart());
         btnBuyNow.setOnClickListener(v -> navigateToProductConfig());
     }

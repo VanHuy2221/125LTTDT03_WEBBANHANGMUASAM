@@ -8,21 +8,40 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
-
+    private BottomNavigationView bottomNav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        bottomNav = findViewById(R.id.bottom_nav);
+
         // Xử lý sự kiện bottom navigation
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
-            // Xử lý chuyển tab
-            return true;
-        });
+        setupBottomNavigation();
 
         // Xử lý sự kiện click vào sản phẩm
         setupProductClickListeners();
+
+        // THÊM SỰ KIỆN CLICK CHO THANH TÌM KIẾM
+        setupSearchBarClickListener();
+        // Xử lý sự kiện bottom navigation
+
+
+    }
+
+    private void setupSearchBarClickListener() {
+        // Tìm thanh tìm kiếm trong layout và thêm sự kiện click
+        View searchBar = findViewById(R.id.search_bar);
+        if (searchBar != null) {
+            searchBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Chuyển sang SearchListActivity khi bấm vào thanh tìm kiếm
+                    Intent intent = new Intent(HomeActivity.this, SearchListActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void setupProductClickListeners() {
@@ -90,5 +109,32 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("PRODUCT_DESCRIPTION", productDescription);
         intent.putExtra("PRODUCT_IMAGE", productImage);
         startActivity(intent);
+    }
+
+    private void setupBottomNavigation() {
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                // Đã ở Home rồi nên không cần làm gì
+                return true;
+            } else if (itemId == R.id.nav_order) {
+                // Chuyển đến OrderTrackingActivity
+                Intent intent = new Intent(HomeActivity.this, OrderTrackingActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_cart) {
+                // Chuyển đến CartActivity
+                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_account) {
+                // Chuyển đến AccountActivity
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
     }
 }
