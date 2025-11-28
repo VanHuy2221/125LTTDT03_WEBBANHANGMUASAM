@@ -394,7 +394,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation giống file trước -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"

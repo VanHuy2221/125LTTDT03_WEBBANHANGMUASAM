@@ -8,15 +8,12 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
-
     private BottomNavigationView bottomNav;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Khởi tạo bottomNav
         bottomNav = findViewById(R.id.bottom_nav);
 
         // Xử lý sự kiện bottom navigation
@@ -24,6 +21,27 @@ public class HomeActivity extends AppCompatActivity {
 
         // Xử lý sự kiện click vào sản phẩm
         setupProductClickListeners();
+
+        // THÊM SỰ KIỆN CLICK CHO THANH TÌM KIẾM
+        setupSearchBarClickListener();
+        // Xử lý sự kiện bottom navigation
+
+
+    }
+
+    private void setupSearchBarClickListener() {
+        // Tìm thanh tìm kiếm trong layout và thêm sự kiện click
+        View searchBar = findViewById(R.id.search_bar);
+        if (searchBar != null) {
+            searchBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Chuyển sang SearchListActivity khi bấm vào thanh tìm kiếm
+                    Intent intent = new Intent(HomeActivity.this, SearchListActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void setupProductClickListeners() {

@@ -16,8 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class ProfileActivity extends AppCompatActivity {
-
+public class UnProfileActivity extends AppCompatActivity {
     LinearLayout menuContainer;
     private BottomNavigationView bottomNav;
 
@@ -25,13 +24,15 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_unlogin);
 
         bottomNav = findViewById(R.id.bottom_nav);
         menuContainer = findViewById(R.id.menuContainer);
 
         // Thiết lập bottom navigation
         setupBottomNavigation();
+
+        setupLoginClickListener();
 
         // Đặt item "Account" là selected (vì đang ở ProfileActivity)
         bottomNav.setSelectedItemId(R.id.nav_account);
@@ -52,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         addItem("Tin nhắn", R.drawable.ic_message, v -> {
             // Mở ChatListActivity khi nhấn vào Tin nhắn
-            Intent intent = new Intent(ProfileActivity.this, ChatListActivity.class);
+            Intent intent = new Intent(UnProfileActivity.this, LoginActivity.class);
             startActivity(intent);
         });
 
@@ -79,11 +80,6 @@ public class ProfileActivity extends AppCompatActivity {
         addItem("Cài đặt", R.drawable.ic_settings, v -> {
             // TODO: Mở SettingsActivity
         });
-
-        addItem("Đăng xuất", R.drawable.ic_logout, v -> {
-            // Xử lý đăng xuất
-            performLogout();
-        });
     }
 
     private void addItem(String title, int iconRes, View.OnClickListener clickListener) {
@@ -105,26 +101,37 @@ public class ProfileActivity extends AppCompatActivity {
         menuContainer.addView(divider);
     }
 
+    private void setupLoginClickListener() {
+        View nguyenHaItem = findViewById(R.id.btnLogin);
+        nguyenHaItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginAction();
+            }
+        });
+    }
+
+
     private void setupBottomNavigation() {
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.nav_home) {
                 // Chuyển về Home và kết thúc Activity hiện tại
-                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+                Intent intent = new Intent(UnProfileActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_order) {
                 // Chuyển đến OrderTrackingActivity
-                Intent intent = new Intent(ProfileActivity.this, OrderTrackingActivity.class);
+                Intent intent = new Intent(UnProfileActivity.this, OrderTrackingActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_cart) {
                 // Chuyển đến CartActivity
-                Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
+                Intent intent = new Intent(UnProfileActivity.this, CartActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -141,9 +148,14 @@ public class ProfileActivity extends AppCompatActivity {
         // Ví dụ: xóa token, clear shared preferences, v.v.
 
         // Chuyển về màn hình đăng nhập
-        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+        Intent intent = new Intent(UnProfileActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void LoginAction() {
+        Intent intent = new Intent(UnProfileActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 }
