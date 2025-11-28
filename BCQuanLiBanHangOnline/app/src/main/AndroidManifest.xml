@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BCQuanLiBanHangOnline">
         <activity
-            android:name=".ReviewActivity"
+            android:name=".SearchListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
