@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+
     private BottomNavigationView bottomNav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,43 @@ public class HomeActivity extends AppCompatActivity {
                 );
             }
         });
+
+        // Sản phẩm đề xuất - AirPods Pro 2
+        CardView airpodsCard = findViewById(R.id.airpods_pro_2_card);
+        airpodsCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToProductDetail(
+                        "AirPods Pro 2",
+                        5990000,
+                        "AirPods Pro 2 - tai nghe không dây Apple với chip H2, chống ồn chủ động cải tiến và thời lượng pin lên đến 30 giờ.",
+                        R.drawable.airpods_pro_2
+                );
+            }
+        });
+
+        // Sản phẩm đề xuất - Apple Watch Series 8
+        CardView watchCard = findViewById(R.id.apple_watch_8_card);
+        watchCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToProductDetail(
+                        "Apple Watch Series 8",
+                        10990000,
+                        "Apple Watch Series 8 - đồng hồ thông minh với tính năng đo nhiệt độ, cảm biến va chạm và màn hình Retina luôn bật.",
+                        R.drawable.apple_watch_8
+                );
+            }
+        });
+    }
+
+    private void navigateToProductDetail(String productName, int productPrice, String productDescription, int productImage) {
+        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+        intent.putExtra("PRODUCT_NAME", productName);
+        intent.putExtra("PRODUCT_PRICE", productPrice);
+        intent.putExtra("PRODUCT_DESCRIPTION", productDescription);
+        intent.putExtra("PRODUCT_IMAGE", productImage);
+        startActivity(intent);
     }
 
     private void navigateToProductDetail(String productName, int productPrice, String productDescription, int productImage) {

@@ -78,6 +78,36 @@ public class ProductConfigActivity extends AppCompatActivity {
         }
     }
 
+    private void loadProductData() {
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("PRODUCT_NAME")) {
+            productName = intent.getStringExtra("PRODUCT_NAME");
+            basePrice = intent.getIntExtra("PRODUCT_PRICE", 0);
+            String description = intent.getStringExtra("PRODUCT_DESCRIPTION");
+            productImageRes = intent.getIntExtra("PRODUCT_IMAGE", R.drawable.iphone_14_pro_max);
+
+            // Cập nhật tên sản phẩm
+            TextView productNameView = findViewById(R.id.productName);
+            if (productNameView != null) {
+                productNameView.setText(productName);
+            }
+
+            // Cập nhật giá gốc
+            TextView productPriceView = findViewById(R.id.productPrice);
+            if (productPriceView != null) {
+                productPriceView.setText(formatPrice(basePrice));
+            }
+
+            // Cập nhật hình ảnh sản phẩm
+            if (productImage != null) {
+                productImage.setImageResource(productImageRes);
+            }
+
+            // Cập nhật tổng tiền ban đầu
+            updateTotalPrice();
+        }
+    }
+
     private void setupEventListeners() {
         // NÚT BACK - QUAY VỀ PRODUCT DETAIL
         if (btnBack != null) {
