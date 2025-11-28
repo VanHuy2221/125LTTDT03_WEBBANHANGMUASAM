@@ -26,9 +26,9 @@
                 android:padding="16dp">
 
                 <ImageView
+                    android:id="@+id/productImage"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/iphone_14_pro_max"
                     android:scaleType="centerCrop" />
 
                 <LinearLayout
@@ -39,17 +39,19 @@
                     android:paddingStart="12dp">
 
                     <TextView
+                        android:id="@+id/productName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="iPhone 14 Pro Max 128GB"
+                        android:text=""
                         android:textColor="#333"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/productPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="25.990.000đ"
+                        android:text=""
                         android:textColor="#e53935"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -61,6 +63,7 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Các phần còn lại giữ nguyên... -->
         <!-- Quantity Selection -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -147,7 +150,6 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <!-- QUAN TRỌNG: RadioGroup phải BAO QUANH TRỰC TIẾP các RadioButton -->
                 <RadioGroup
                     android:id="@+id/colorGroup"
                     android:layout_width="match_parent"
@@ -155,7 +157,6 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="12dp">
 
-                    <!-- RadioButton Đen -->
                     <RadioButton
                         android:id="@+id/colorBlack"
                         android:layout_width="0dp"
@@ -165,7 +166,6 @@
                         android:background="@drawable/color_selector"
                         android:tag="#000000" />
 
-                    <!-- RadioButton Trắng -->
                     <RadioButton
                         android:id="@+id/colorWhite"
                         android:layout_width="0dp"
@@ -175,7 +175,6 @@
                         android:background="@drawable/color_selector_white"
                         android:tag="#FFFFFF" />
 
-                    <!-- RadioButton Vàng -->
                     <RadioButton
                         android:id="@+id/colorGold"
                         android:layout_width="0dp"
@@ -187,7 +186,6 @@
 
                 </RadioGroup>
 
-                <!-- Text labels bên ngoài RadioGroup -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,7 +248,6 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <!-- SỬ DỤNG MaterialButtonToggleGroup THAY CHO RadioGroup -->
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/storageGroup"
                     android:layout_width="match_parent"
@@ -320,7 +317,7 @@
                     android:id="@+id/tvTotalPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25.990.000đ"
+                    android:text=""
                     android:textColor="#e53935"
                     android:textSize="20sp"
                     android:textStyle="bold" />

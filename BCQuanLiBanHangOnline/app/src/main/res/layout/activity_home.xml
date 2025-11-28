@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
@@ -33,7 +34,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_bell"
-            android:tint="#000000"/>
+            app:tint="#000000"
+            tools:ignore="VectorDrawableCompat"/>
 
         <TextView
             android:id="@+id/notification_count"
@@ -52,7 +54,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_cart"
-            android:tint="#000000"
+            app:tint="#000000"
+            tools:ignore="VectorDrawableCompat"
             android:layout_marginStart="16dp"/>
 
         <TextView
@@ -68,27 +71,41 @@
             android:layout_marginTop="-12dp"/>
     </LinearLayout>
 
-    <!-- Search Bar - ĐÃ SỬA ICON -->
-    <EditText
+    <!-- Search Bar -->
+    <LinearLayout
         android:id="@+id/search_bar"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:hint="Tìm kiếm sản phẩm..."
         android:background="@drawable/search_bg_rounded"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:drawableTint="#666666"
-        android:textSize="14sp"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp">
 
-    <!-- ScrollView chính - ĐÃ SỬA CÓ THỂ CUỘN -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_search"
+            app:tint="#666666"
+            android:layout_marginEnd="8dp"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Tìm kiếm sản phẩm..."
+            android:background="@android:color/transparent"
+            android:textSize="14sp"
+            android:padding="0dp"/>
+
+    </LinearLayout>
+
+    <!-- ScrollView chính -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -102,7 +119,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Banner Sale ĐƠN GIẢN -->
+            <!-- Banner Sale -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -191,7 +208,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_smartphone"
-                        android:tint="#2196F3"/>
+                        app:tint="#2196F3"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -216,7 +233,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_laptop"
-                        android:tint="#4CAF50"/>
+                        app:tint="#4CAF50"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -241,7 +258,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_fashion"
-                        android:tint="#FF9800"/>
+                        app:tint="#FF9800"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -266,7 +283,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_home"
-                        android:tint="#9C27B0"/>
+                        app:tint="#9C27B0"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -316,6 +333,7 @@
 
                 <!-- iPhone 14 Pro Max -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/iphone_14_pro_max_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -382,6 +400,7 @@
 
                 <!-- Samsung Galaxy S23 Ultra -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/samsung_s23_ultra_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -485,6 +504,7 @@
 
                 <!-- AirPods Pro 2 -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/airpods_pro_2_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -551,6 +571,7 @@
 
                 <!-- Apple Watch Series 8 -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/apple_watch_8_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
