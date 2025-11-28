@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BCQuanLiBanHangOnline">
         <activity
-            android:name=".HomeActivity"
+            android:name=".UnProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +25,16 @@
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".PaymentSuccessActivity" />
         <activity android:name=".ProductDetailActivity" />
+        <activity android:name=".SearchListActivity" />
         <activity android:name=".OrderTrackingActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".CartActivity" />
         <activity android:name=".ChatListActivity" />
         <activity android:name=".ChatDetailActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".OrderManagementActivity" />
         <activity android:name=".ReviewActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".HomeActivity" />
     </application>
 
 </manifest>
