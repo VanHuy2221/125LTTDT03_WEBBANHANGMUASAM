@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,9 +22,6 @@ public class PaymentSuccessActivity extends AppCompatActivity {
         initializeViews();
         setupEventListeners();
         displayOrderDetails();
-
-        // THÊM CODE XỬ LÝ BACK GESTURE MỚI
-        setupBackPressedHandler();
     }
 
     private void initializeViews() {
@@ -45,7 +41,7 @@ public class PaymentSuccessActivity extends AppCompatActivity {
         });
 
         btnViewOrder.setOnClickListener(v -> {
-            navigateToOrderTracking();
+            navigateToOrderDetails();
         });
     }
 
@@ -92,38 +88,24 @@ public class PaymentSuccessActivity extends AppCompatActivity {
     }
 
     private void navigateToHome() {
-        // Chuyển về HomeActivity
-        Intent intent = new Intent(this, HomeActivity.class);
+        // Clear back stack và quay về MainActivity
+        Intent intent = new Intent(this, ProductDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
-    private void navigateToOrderTracking() {
-        // Chuyển sang OrderTrackingActivity và truyền thông tin đơn hàng
-        Intent intent = new Intent(this, OrderTrackingActivity.class);
-
-        // Truyền dữ liệu đơn hàng sang OrderTrackingActivity
+    private void navigateToOrderDetails() {
+        // Chuyển đến màn hình chi tiết đơn hàng
+        Intent intent = new Intent(this, ProductDetailActivity.class);
         intent.putExtra("ORDER_NUMBER", tvOrderNumber.getText().toString());
-        intent.putExtra("ORDER_DATE", tvOrderDate.getText().toString());
-        intent.putExtra("ORDER_TOTAL", tvOrderTotal.getText().toString());
-        intent.putExtra("PAYMENT_METHOD", tvPaymentMethod.getText().toString());
-        intent.putExtra("ORDER_STATUS", tvOrderStatus.getText().toString());
-
-        // Clear back stack và start activity mới
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
-    // PHƯƠNG THỨC MỚI: Xử lý back gesture với OnBackPressedDispatcher
-    private void setupBackPressedHandler() {
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Khi nhấn back (cả nút vật lý lẫn gesture), quay về trang chủ
-                navigateToHome();
-            }
-        });
-    }
+    //@Override
+    //public void onBackPressed() {
+        // Khi nhấn back, quay về trang chủ
+        //navigateToHome();
+    //}
 }
