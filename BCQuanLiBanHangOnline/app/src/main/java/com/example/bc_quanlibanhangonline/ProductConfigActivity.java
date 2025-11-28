@@ -2,7 +2,6 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 public class ProductConfigActivity extends AppCompatActivity {
 
     private TextView tvTotalPrice, tvQuantity;
-    private ImageView productImage, btnBack;
+    private ImageView productImage;
     private Button btnDecrease, btnIncrease, btnConfirmPurchase;
     private MaterialButtonToggleGroup storageGroup;
 
@@ -43,9 +42,6 @@ public class ProductConfigActivity extends AppCompatActivity {
         btnIncrease = findViewById(R.id.btnIncrease);
         btnConfirmPurchase = findViewById(R.id.btnConfirmPurchase);
         storageGroup = findViewById(R.id.storageGroup);
-
-        // THÊM NÚT BACK
-        btnBack = findViewById(R.id.btnBack);
     }
 
     private void loadProductData() {
@@ -79,16 +75,6 @@ public class ProductConfigActivity extends AppCompatActivity {
     }
 
     private void setupEventListeners() {
-        // NÚT BACK - QUAY VỀ PRODUCT DETAIL
-        if (btnBack != null) {
-            btnBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish(); // Đóng Activity hiện tại, quay về ProductDetail
-                }
-            });
-        }
-
         // Nút giảm số lượng
         btnDecrease.setOnClickListener(v -> {
             if (quantity > 1) {
@@ -114,8 +100,8 @@ public class ProductConfigActivity extends AppCompatActivity {
             });
         }
 
-        // Nút xác nhận mua hàng - CHUYỂN SANG PAYMENT ACTIVITY
-        btnConfirmPurchase.setOnClickListener(v -> navigateToPayment());
+        // Nút xác nhận mua hàng
+        btnConfirmPurchase.setOnClickListener(v -> confirmPurchase());
     }
 
     private void updateTotalPrice() {
@@ -140,24 +126,23 @@ public class ProductConfigActivity extends AppCompatActivity {
         return String.format("%,dđ", price).replace(",", ".");
     }
 
-    private void navigateToPayment() {
-        int finalTotalPrice = basePrice * quantity;
+    private void confirmPurchase() {
+        int finalPrice = basePrice * quantity;
 
         // Tính thêm phí dung lượng cuối cùng
         if (storageGroup != null) {
             int checkedButtonId = storageGroup.getCheckedButtonId();
             if (checkedButtonId == R.id.storage256) {
-                finalTotalPrice += 3000000;
+                finalPrice += 3000000;
             } else if (checkedButtonId == R.id.storage512) {
-                finalTotalPrice += 6000000;
+                finalPrice += 6000000;
             }
         }
 
-        // Chuyển sang PaymentActivity
-        Intent paymentIntent = new Intent(this, PaymentActivity.class);
-        paymentIntent.putExtra("QUANTITY", quantity);
-        paymentIntent.putExtra("TOTAL_PRICE", finalTotalPrice);
-        paymentIntent.putExtra("PRODUCT_NAME", productName);
-        startActivity(paymentIntent);
+        Toast.makeText(this,
+                "Đã xác nhận mua " + productName +
+                        "\nSố lượng: " + quantity +
+                        "\nTổng tiền: " + formatPrice(finalPrice),
+                Toast.LENGTH_LONG).show();
     }
 }

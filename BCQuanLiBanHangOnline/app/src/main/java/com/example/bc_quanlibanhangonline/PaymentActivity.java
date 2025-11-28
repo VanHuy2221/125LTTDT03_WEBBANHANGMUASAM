@@ -2,15 +2,14 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -18,8 +17,8 @@ public class PaymentActivity extends AppCompatActivity {
     private Button btnProcessPayment;
     private RadioGroup paymentMethodGroup;
     private RadioButton radioQR, radioCreditCard, radioCOD;
-    private ImageView btnBack;
 
+    // Sửa thành LinearLayout
     private LinearLayout layoutQR, layoutCreditCard, layoutCOD;
 
     private int quantity;
@@ -50,10 +49,7 @@ public class PaymentActivity extends AppCompatActivity {
         radioCreditCard = findViewById(R.id.radioCreditCard);
         radioCOD = findViewById(R.id.radioCOD);
 
-        // Nút back
-        btnBack = findViewById(R.id.btnBack);
-
-        // Các layout
+        // Khởi tạo các layout - ĐÃ CÓ ID TRONG XML
         layoutQR = findViewById(R.id.layoutQR);
         layoutCreditCard = findViewById(R.id.layoutCreditCard);
         layoutCOD = findViewById(R.id.layoutCOD);
@@ -63,16 +59,6 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void setupEventListeners() {
-        // NÚT BACK - QUAY VỀ PRODUCT CONFIG
-        if (btnBack != null) {
-            btnBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish(); // Đóng Activity hiện tại, quay về ProductConfig
-                }
-            });
-        }
-
         // Xử lý click trên toàn bộ layout
         layoutQR.setOnClickListener(v -> radioQR.setChecked(true));
         layoutCreditCard.setOnClickListener(v -> radioCreditCard.setChecked(true));
@@ -81,6 +67,9 @@ public class PaymentActivity extends AppCompatActivity {
         btnProcessPayment.setOnClickListener(v -> {
             processPayment();
         });
+
+        // Không cần xử lý RadioGroup change listener nữa
+        // vì đã có selectableItemBackground tự động
     }
 
     private void calculateFinalTotal() {
@@ -89,29 +78,26 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void processPayment() {
-        // SỬA Ở ĐÂY: LUÔN CHUYỂN SANG QR PAYMENT KHÔNG CẦN KIỂM TRA
-        navigateToQRPayment();
+        int selectedMethodId = paymentMethodGroup.getCheckedRadioButtonId();
+
+        if (selectedMethodId == -1) {
+            Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (selectedMethodId == R.id.radioQR) {
+            navigateToQRPayment();
+        } else if (selectedMethodId == R.id.radioCreditCard) {
+            navigateToCreditCardPayment();
+        } else if (selectedMethodId == R.id.radioCOD) {
+            confirmCODPayment();
+        }
     }
 
     private void navigateToQRPayment() {
-        try {
-            // THÊM CODE NÀY: Chuyển sang QRPaymentActivity
-            Intent intent = new Intent(PaymentActivity.this, QRPaymentActivity.class);
-            intent.putExtra("FINAL_TOTAL", getFinalTotalAmount());
-
-            // Thêm các thông tin cần thiết khác nếu có
-            intent.putExtra("QUANTITY", quantity);
-            intent.putExtra("TOTAL_PRICE", totalPrice);
-
-            startActivity(intent);
-
-            // THÊM TOAST ĐỂ XÁC NHẬN
-            Toast.makeText(this, "Đang chuyển đến thanh toán QR...", Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(this, QRPaymentActivity.class);
+        intent.putExtra("FINAL_TOTAL", getFinalTotalAmount());
+        startActivity(intent);
     }
 
     private void navigateToCreditCardPayment() {

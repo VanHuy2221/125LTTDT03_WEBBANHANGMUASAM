@@ -33,9 +33,8 @@ public class QRPaymentActivity extends AppCompatActivity {
     }
 
     private void setupEventListeners() {
-        // NÚT HỦY THANH TOÁN - QUAY VỀ PAYMENT ACTIVITY
         btnCancelPayment.setOnClickListener(v -> {
-            cancelPaymentAndReturn();
+            cancelPayment();
         });
 
         btnPaymentDone.setOnClickListener(v -> {
@@ -55,7 +54,7 @@ public class QRPaymentActivity extends AppCompatActivity {
             public void onFinish() {
                 tvTimer.setText("00:00");
                 Toast.makeText(QRPaymentActivity.this, "Thời gian thanh toán đã hết", Toast.LENGTH_LONG).show();
-                finish(); // Tự động quay về PaymentActivity khi hết giờ
+                finish();
             }
         }.start();
     }
@@ -68,12 +67,12 @@ public class QRPaymentActivity extends AppCompatActivity {
         tvTimer.setText(timeLeftFormatted);
     }
 
-    private void cancelPaymentAndReturn() {
+    private void cancelPayment() {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
         Toast.makeText(this, "Đã hủy thanh toán", Toast.LENGTH_SHORT).show();
-        finish(); // Quay về PaymentActivity
+        finish();
     }
 
     private void confirmPayment() {
@@ -102,7 +101,7 @@ public class QRPaymentActivity extends AppCompatActivity {
         intent.putExtra("ORDER_TOTAL", getIntent().getIntExtra("FINAL_TOTAL", 25520000));
         intent.putExtra("PAYMENT_METHOD", "QR Code");
         startActivity(intent);
-        finish(); // Đóng QRPaymentActivity
+        finish();
     }
 
     @Override

@@ -151,12 +151,15 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation - ĐÃ SỬA CHO LINEARLAYOUT -->
+    <!-- Bottom Navigation - ĐÃ ĐƯỢC THAY THẾ -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
         android:background="#ffffff"
         android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/bottom_nav_menu"/>
 </LinearLayout>
