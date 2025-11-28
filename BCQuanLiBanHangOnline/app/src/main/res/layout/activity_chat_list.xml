@@ -8,38 +8,16 @@
     android:orientation="vertical">
 
     <!-- Header -->
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:text="Chat"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center"
         android:padding="16dp"
-        android:background="#FFFFFF"
-        android:gravity="center_vertical">
-
-        <!-- Nút Back -->
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_back"
-            android:padding="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:tint="#000000"
-            android:layout_marginEnd="16dp"/>
-
-        <!-- Tiêu đề -->
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Chat"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:gravity="center_vertical"/>
-
-    </LinearLayout>
+        android:background="#FFFFFF"/>
 
     <!-- Thanh tìm kiếm và Tab Tất cả trong cùng 1 dòng -->
     <LinearLayout
@@ -104,7 +82,6 @@
 
             <!-- Nguyễn Hà -->
             <LinearLayout
-                android:id="@+id/nguyenHaChatItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

@@ -25,11 +25,6 @@
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".PaymentSuccessActivity" />
         <activity android:name=".ProductDetailActivity" />
-        <activity android:name=".OrderTrackingActivity" />
-        <activity android:name=".ChatListActivity" />
-        <activity android:name=".ChatDetailActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".ReviewActivity" />
         <activity android:name=".SearchListActivity" />
         <activity android:name=".OrderTrackingActivity" />
         <activity android:name=".ProfileActivity" />

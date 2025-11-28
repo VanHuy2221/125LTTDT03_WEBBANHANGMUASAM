@@ -43,47 +43,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void addMenuItems() {
-        addItem("Thông tin cá nhân", R.drawable.ic_person, v -> {
-            // TODO: Mở PersonalInfoActivity
-        });
-
-        addItem("Tin nhắn", R.drawable.ic_message, v -> {
-            // Mở ChatListActivity khi nhấn vào Tin nhắn
-            Intent intent = new Intent(ProfileActivity.this, ChatListActivity.class);
-            startActivity(intent);
-        });
-
-        addItem("Địa chỉ giao hàng", R.drawable.ic_location, v -> {
-            // TODO: Mở AddressActivity
-        });
-
-        addItem("Đơn hàng của tôi", R.drawable.ic_cart, v -> {
-            // TODO: Mở OrderHistoryActivity
-        });
-
-        addItem("Sản phẩm yêu thích", R.drawable.ic_heart, v -> {
-            // TODO: Mở FavoriteProductsActivity
-        });
-
-        addItem("Phương thức thanh toán", R.drawable.ic_payment, v -> {
-            // TODO: Mở PaymentMethodsActivity
-        });
-
-        addItem("Cài đặt thông báo", R.drawable.ic_bell, v -> {
-            // TODO: Mở NotificationSettingsActivity
-        });
-
-        addItem("Cài đặt", R.drawable.ic_settings, v -> {
-            // TODO: Mở SettingsActivity
-        });
-
-        addItem("Đăng xuất", R.drawable.ic_logout, v -> {
-            // Xử lý đăng xuất
-            performLogout();
-        });
+        addItem("Thông tin cá nhân", R.drawable.ic_person);
+        addItem("Tin nhắn", R.drawable.ic_message);
+        addItem("Địa chỉ giao hàng", R.drawable.ic_location);
+        addItem("Đơn hàng của tôi", R.drawable.ic_cart);
+        addItem("Sản phẩm yêu thích", R.drawable.ic_heart);
+        addItem("Phương thức thanh toán", R.drawable.ic_payment);
+        addItem("Cài đặt thông báo", R.drawable.ic_bell);
+        addItem("Cài đặt", R.drawable.ic_settings);
+        addItem("Đăng xuất", R.drawable.ic_logout);
     }
 
-    private void addItem(String title, int iconRes, View.OnClickListener clickListener) {
+    private void addItem(String title, int iconRes) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_menu, menuContainer, false);
 
         ImageView imgIcon = view.findViewById(R.id.imgIcon);
@@ -93,7 +64,9 @@ public class ProfileActivity extends AppCompatActivity {
         txtTitle.setText(title);
 
         // Click handler
-        view.setOnClickListener(clickListener);
+        view.setOnClickListener(v -> {
+            // TODO: mở activity tương ứng
+        });
 
         menuContainer.addView(view);
 
@@ -130,14 +103,3 @@ public class ProfileActivity extends AppCompatActivity {
     }
 }
 
-    private void performLogout() {
-        // TODO: Xử lý logic đăng xuất
-        // Ví dụ: xóa token, clear shared preferences, v.v.
-
-        // Chuyển về màn hình đăng nhập
-        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-}
