@@ -8,5 +8,5 @@
     <color name="qr_method_bg">#E3F2FD</color>
     <color name="credit_card_bg">#F3E5F5</color>
     <color name="cod_method_bg">#E8F5E8</color>
-    <color name="chip_background">#FFE0E0E0</color>
+    <color name="chip_background">#FFFFFF</color>
 </resources>
