@@ -17,8 +17,8 @@ public class OrderTrackingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_tracking);
 
         bottomNav = findViewById(R.id.bottom_nav);
+        bottomNav.setSelectedItemId(R.id.nav_order);
         setupBottomNavigation();
-
         setupReviewClickListener();
     }
 
@@ -33,30 +33,36 @@ public class OrderTrackingActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.nav_home) {
-                Intent intent = new Intent(OrderTrackingActivity.this, HomeActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, HomeActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
+
             } else if (itemId == R.id.nav_order) {
-                // Chuyển đến OrderTrackingActivity
+                // 👉 ĐANG Ở ĐƠN HÀNG → KHÔNG LÀM GÌ
                 return true;
+
             } else if (itemId == R.id.nav_cart) {
-                // Chuyển đến CartActivity
-                Intent intent = new Intent(OrderTrackingActivity.this, CartActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, CartActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
+
             } else if (itemId == R.id.nav_account) {
-                // Chuyển đến AccountActivity
-                Intent intent = new Intent(OrderTrackingActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
+
             return false;
         });
     }
+
 
     private void navigateToReview(){
         Intent intent = new Intent(OrderTrackingActivity.this, ReviewActivity.class);
