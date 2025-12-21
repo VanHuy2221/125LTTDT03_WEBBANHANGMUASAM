@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BCQuanLiBanHangOnline">
         <activity
-            android:name=".UnProfileActivity"
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,6 @@
         <activity android:name=".OrderManagementActivity" />
         <activity android:name=".ReviewActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".HomeActivity" />
     </application>
 
 </manifest>
