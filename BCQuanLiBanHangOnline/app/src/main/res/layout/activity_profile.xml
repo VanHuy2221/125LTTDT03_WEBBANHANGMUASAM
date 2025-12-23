@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#FAFAFA"
     android:fitsSystemWindows="false">
 
     <!-- SCROLL CONTENT -->
@@ -21,46 +21,9 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:layout_height="wrap_content">
 
-            <!-- Start Selling Banner -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="#E3F2FD">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Bắt đầu bán"
-                        android:textColor="#1976D2"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bán ngay ›"
-                        android:textColor="#1976D2"
-                        android:textSize="14sp"
-                        android:padding="8dp"
-                        android:background="@drawable/button_outline_blue" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Header -->
+            <!-- Header - SÁT VIỀN TRÊN -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
