@@ -15,6 +15,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         bottomNav = findViewById(R.id.bottom_nav);
+        bottomNav.setSelectedItemId(R.id.nav_home);
 
         // Xử lý sự kiện bottom navigation
         setupBottomNavigation();
@@ -112,28 +113,31 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.nav_home) {
-                // Đã ở Home rồi nên không cần làm gì
                 return true;
+
             } else if (itemId == R.id.nav_order) {
-                // Chuyển đến OrderTrackingActivity
-                Intent intent = new Intent(HomeActivity.this, OrderTrackingActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, OrderTrackingActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
+
             } else if (itemId == R.id.nav_cart) {
-                // Chuyển đến CartActivity
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, CartActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
+
             } else if (itemId == R.id.nav_account) {
-                // Chuyển đến AccountActivity
-                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
+
             return false;
         });
     }

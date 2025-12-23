@@ -2,48 +2,70 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class OrderTrackingActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_tracking);
 
         bottomNav = findViewById(R.id.bottom_nav);
-
-        // Xử lý sự kiện bottom navigation
+        bottomNav.setSelectedItemId(R.id.nav_order);
         setupBottomNavigation();
-
-
+        setupReviewClickListener();
     }
+
+    private void setupReviewClickListener(){
+        View reviewButton = findViewById(R.id.btn_evaluate);
+        reviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToReview();
+            }
+        });
+    }
+
     private void setupBottomNavigation() {
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.nav_order) {
-                // Đã ở Home rồi nên không cần làm gì
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(this, HomeActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
-            } else if (itemId == R.id.nav_home) {
-                // Chuyển đến OrderTrackingActivity
-                Intent intent = new Intent(OrderTrackingActivity.this, HomeActivity.class);
-                startActivity(intent);
+
+            } else if (itemId == R.id.nav_order) {
+                // 👉 ĐANG Ở ĐƠN HÀNG → KHÔNG LÀM GÌ
                 return true;
+
             } else if (itemId == R.id.nav_cart) {
-                // Chuyển đến CartActivity
-                Intent intent = new Intent(OrderTrackingActivity.this, CartActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, CartActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
+
             } else if (itemId == R.id.nav_account) {
-                // Chuyển đến AccountActivity
-                Intent intent = new Intent(OrderTrackingActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
+
             return false;
         });
+    }
+
+
+    private void navigateToReview(){
+        Intent intent = new Intent(OrderTrackingActivity.this, ReviewActivity.class);
+        startActivity(intent);
     }
 }

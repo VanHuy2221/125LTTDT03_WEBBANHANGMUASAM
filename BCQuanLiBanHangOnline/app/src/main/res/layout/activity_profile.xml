@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="false">
 
+    <!-- SCROLL CONTENT -->
     <ScrollView
-        android:layout_width="match_parent"
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:orientation="vertical"
@@ -51,9 +57,7 @@
                         android:textSize="14sp"
                         android:padding="8dp"
                         android:background="@drawable/button_outline_blue" />
-
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
 
             <!-- Header -->
@@ -80,7 +84,6 @@
                     android:layout_marginStart="16dp"
                     android:gravity="center_vertical">
 
-                    <!-- Tên và thành viên -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -106,10 +109,8 @@
                             android:paddingHorizontal="8dp"
                             android:paddingVertical="2dp"
                             android:layout_marginStart="8dp" />
-
                     </LinearLayout>
 
-                    <!-- Theo dõi và Đang theo dõi -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -135,9 +136,7 @@
                             android:text="3 Đang theo dõi"
                             android:textColor="#666666"
                             android:textSize="14sp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
             </LinearLayout>
 
@@ -151,12 +150,16 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation - ĐÃ SỬA CHO LINEARLAYOUT -->
+    <!-- ✅ BOTTOM NAV – GIỐNG Y HỆT LAYOUT TRƯỚC -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
         android:background="#ffffff"
         android:elevation="8dp"
-        app:menu="@menu/bottom_nav_menu"/>
-</LinearLayout>
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

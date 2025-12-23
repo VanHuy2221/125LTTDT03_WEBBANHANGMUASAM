@@ -29,6 +29,11 @@
         <activity android:name=".OrderTrackingActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CartActivity" />
+        <activity android:name=".ChatListActivity" />
+        <activity android:name=".ChatDetailActivity" />
+        <activity android:name=".OrderManagementActivity" />
+        <activity android:name=".ReviewActivity" />
+        <activity android:name=".LoginActivity" />
     </application>
 
 </manifest>
