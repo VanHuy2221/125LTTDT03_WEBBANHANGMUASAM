@@ -64,4 +64,5 @@
     <color name="checkbox_tint">#e53935</color>
     <color name="checkbox_unchecked">#BDBDBD</color>
 
+    <color name="orange_primary">#B85E12</color>
 </resources>
