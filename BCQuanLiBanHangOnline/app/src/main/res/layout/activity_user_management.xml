@@ -37,15 +37,54 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Nguyễn Văn A" android:textColor="#1A1A1A" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="nguyenvana@email.com" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="4dp"/>
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Người mua • Đăng ký: 15/08/2025" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="12dp"/>
-                    <!--  Action Buttons và Status  -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <!--  Buttons  -->
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal">
-                            <Button android:layout_width="wrap_content" android:layout_height="32dp" android:text="CHỈNH SỬA" android:textColor="#FF6B35" android:textSize="12sp" android:background="@drawable/button_outline_background" android:layout_marginEnd="8dp" android:paddingHorizontal="16dp"/>
-                            <Button android:layout_width="wrap_content" android:layout_height="32dp" android:text="KHÓA" android:textColor="#FFFFFF" android:textSize="12sp" android:background="@drawable/button_primary_background" android:paddingHorizontal="16dp"/>
+                    <!-- ACTION ROW: Buttons + Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <!-- BUTTON GROUP -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="start">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="XEM THÔNG TIN"
+                                android:textSize="12sp"
+                                android:textColor="#FF6B35"
+                                android:background="@drawable/button_outline_background"
+                                android:paddingHorizontal="16dp"
+                                android:layout_marginEnd="8dp"/>
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="KHÓA"
+                                android:textSize="12sp"
+                                android:textColor="#FFFFFF"
+                                android:background="@drawable/button_primary_background"
+                                android:paddingHorizontal="16dp"/>
                         </LinearLayout>
-                        <!--  Status  -->
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hoạt động" android:textColor="#4CAF50" android:textSize="12sp" android:textStyle="bold" android:background="@drawable/status_active_background" android:paddingHorizontal="12dp" android:paddingVertical="6dp"/>
+
+                        <!-- STATUS -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoạt động"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50"
+                            android:background="@drawable/status_active_background"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:layout_marginStart="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -56,15 +95,54 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Trần Thị B" android:textColor="#1A1A1A" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="tranthib@email.com" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="4dp"/>
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Người bán • Đăng ký: 20/07/2025" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="12dp"/>
-                    <!--  Action Buttons và Status  -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <!--  Buttons  -->
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal">
-                            <Button android:layout_width="wrap_content" android:layout_height="32dp" android:text="CHỈNH SỬA" android:textColor="#FF6B35" android:textSize="12sp" android:background="@drawable/button_outline_background" android:layout_marginEnd="8dp" android:paddingHorizontal="16dp"/>
-                            <Button android:layout_width="wrap_content" android:layout_height="32dp" android:text="KHÓA" android:textColor="#FFFFFF" android:textSize="12sp" android:background="@drawable/button_primary_background" android:paddingHorizontal="16dp"/>
+                    <!-- ACTION ROW: Buttons + Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <!-- BUTTON GROUP -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="start">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="XEM THÔNG TIN"
+                                android:textSize="12sp"
+                                android:textColor="#FF6B35"
+                                android:background="@drawable/button_outline_background"
+                                android:paddingHorizontal="16dp"
+                                android:layout_marginEnd="8dp"/>
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="KHÓA"
+                                android:textSize="12sp"
+                                android:textColor="#FFFFFF"
+                                android:background="@drawable/button_primary_background"
+                                android:paddingHorizontal="16dp"/>
                         </LinearLayout>
-                        <!--  Status  -->
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hoạt động" android:textColor="#4CAF50" android:textSize="12sp" android:textStyle="bold" android:background="@drawable/status_active_background" android:paddingHorizontal="12dp" android:paddingVertical="6dp"/>
+
+                        <!-- STATUS -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoạt động"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50"
+                            android:background="@drawable/status_active_background"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:layout_marginStart="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -75,15 +153,54 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Lê Văn C" android:textColor="#1A1A1A" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="levanc@email.com" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="4dp"/>
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Người mua • Đăng ký: 10/06/2025" android:textColor="#666666" android:textSize="14sp" android:layout_marginBottom="12dp"/>
-                    <!--  Action Buttons và Status  -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <!--  Buttons  -->
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal">
-                            <Button android:layout_width="wrap_content" android:layout_height="32dp" android:text="CHỈNH SỬA" android:textColor="#FF6B35" android:textSize="12sp" android:background="@drawable/button_outline_background" android:layout_marginEnd="8dp" android:paddingHorizontal="16dp"/>
-                            <Button android:layout_width="wrap_content" android:layout_height="32dp" android:text="MỞ KHÓA" android:textColor="#FFFFFF" android:textSize="12sp" android:background="@drawable/button_unlock_background" android:paddingHorizontal="16dp"/>
+                    <!-- ACTION ROW: Buttons + Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <!-- BUTTON GROUP -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="start">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="XEM THÔNG TIN"
+                                android:textSize="12sp"
+                                android:textColor="#FF6B35"
+                                android:background="@drawable/button_outline_background"
+                                android:paddingHorizontal="16dp"
+                                android:layout_marginEnd="8dp"/>
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="KHÓA"
+                                android:textSize="12sp"
+                                android:textColor="#FFFFFF"
+                                android:background="@drawable/button_primary_background"
+                                android:paddingHorizontal="16dp"/>
                         </LinearLayout>
-                        <!--  Status  -->
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đã khóa" android:textColor="#F44336" android:textSize="12sp" android:textStyle="bold" android:background="@drawable/status_locked_background" android:paddingHorizontal="12dp" android:paddingVertical="6dp"/>
+
+                        <!-- STATUS -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoạt động"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50"
+                            android:background="@drawable/status_active_background"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:layout_marginStart="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
