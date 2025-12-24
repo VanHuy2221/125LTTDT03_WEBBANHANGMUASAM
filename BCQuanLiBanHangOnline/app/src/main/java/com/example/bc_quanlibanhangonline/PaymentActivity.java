@@ -5,27 +5,31 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class PaymentActivity extends AppCompatActivity {
 
     private TextView tvFinalTotal;
     private Button btnProcessPayment;
-    private RadioGroup paymentMethodGroup;
-    private RadioButton radioQR, radioCreditCard, radioCOD;
     private ImageView btnBack;
 
-    private LinearLayout layoutQR, layoutCreditCard, layoutCOD;
+    // Main method
+    private RadioGroup mainMethodGroup;
+    private RadioButton radioBuyMoney, radioExchange;
+
+    // Payment methods
+    private RadioGroup paymentMethodGroup;
+    private RadioButton radioQR, radioCreditCard, radioCOD;
 
     private int quantity;
     private int totalPrice;
-    private int shippingFee = 30000;
-    private int discount = 500000;
+    private final int shippingFee = 30000;
+    private final int discount = 500000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,51 +40,93 @@ public class PaymentActivity extends AppCompatActivity {
         quantity = intent.getIntExtra("QUANTITY", 1);
         totalPrice = intent.getIntExtra("TOTAL_PRICE", 25990000);
 
-        initializeViews();
-        setupEventListeners();
+        initViews();
+        setupEvents();
         calculateFinalTotal();
     }
 
-    private void initializeViews() {
+    private void initViews() {
         tvFinalTotal = findViewById(R.id.tvFinalTotal);
         btnProcessPayment = findViewById(R.id.btnProcessPayment);
-        paymentMethodGroup = findViewById(R.id.paymentMethodGroup);
+        btnBack = findViewById(R.id.btnBack);
 
+        mainMethodGroup = findViewById(R.id.mainMethodGroup);
+        radioBuyMoney = findViewById(R.id.radioBuyMoney);
+        radioExchange = findViewById(R.id.radioExchange);
+
+        paymentMethodGroup = findViewById(R.id.paymentMethodGroup);
         radioQR = findViewById(R.id.radioQR);
         radioCreditCard = findViewById(R.id.radioCreditCard);
         radioCOD = findViewById(R.id.radioCOD);
 
-        // Nút back
-        btnBack = findViewById(R.id.btnBack);
-
-        // Các layout
-        layoutQR = findViewById(R.id.layoutQR);
-        layoutCreditCard = findViewById(R.id.layoutCreditCard);
-        layoutCOD = findViewById(R.id.layoutCOD);
-
-        // Set mặc định chọn QR
+        // mặc định
+        radioBuyMoney.setChecked(true);
         radioQR.setChecked(true);
+        paymentMethodGroup.setVisibility(View.VISIBLE);
     }
 
-    private void setupEventListeners() {
-        // NÚT BACK - QUAY VỀ PRODUCT CONFIG
-        if (btnBack != null) {
-            btnBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish(); // Đóng Activity hiện tại, quay về ProductConfig
-                }
-            });
+    private void setupEvents() {
+
+        btnBack.setOnClickListener(v -> finish());
+
+        // 🔹 Chọn Mua bằng tiền / Trao đổi
+        mainMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioBuyMoney) {
+                paymentMethodGroup.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.radioExchange) {
+                paymentMethodGroup.setVisibility(View.GONE);
+                Toast.makeText(
+                        this,
+                        "Chức năng trao đổi sản phẩm đang phát triển",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+
+        // 🔹 TỰ QUẢN LÝ chọn 1 trong 3 thanh toán
+        radioQR.setOnClickListener(v -> selectPayment(radioQR));
+        radioCreditCard.setOnClickListener(v -> selectPayment(radioCreditCard));
+        radioCOD.setOnClickListener(v -> selectPayment(radioCOD));
+
+        btnProcessPayment.setOnClickListener(v -> processPayment());
+    }
+
+    // 🔥 ĐẢM BẢO CHỈ 1 RADIO ĐƯỢC CHỌN
+    private void selectPayment(RadioButton selected) {
+        radioQR.setChecked(false);
+        radioCreditCard.setChecked(false);
+        radioCOD.setChecked(false);
+        selected.setChecked(true);
+    }
+
+    private void processPayment() {
+
+        if (radioExchange.isChecked()) {
+            Toast.makeText(
+                    this,
+                    "Chuyển sang luồng trao đổi sản phẩm",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
         }
 
-        // Xử lý click trên toàn bộ layout
-        layoutQR.setOnClickListener(v -> radioQR.setChecked(true));
-        layoutCreditCard.setOnClickListener(v -> radioCreditCard.setChecked(true));
-        layoutCOD.setOnClickListener(v -> radioCOD.setChecked(true));
-
-        btnProcessPayment.setOnClickListener(v -> {
-            processPayment();
-        });
+        if (radioQR.isChecked()) {
+            navigateToQRPayment();
+        } else if (radioCreditCard.isChecked()) {
+            Toast.makeText(
+                    this,
+                    "Thanh toán thẻ đang phát triển",
+                    Toast.LENGTH_SHORT
+            ).show();
+        } else if (radioCOD.isChecked()) {
+            confirmCODPayment();
+        } else {
+            Toast.makeText(
+                    this,
+                    "Vui lòng chọn phương thức thanh toán",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 
     private void calculateFinalTotal() {
@@ -88,34 +134,12 @@ public class PaymentActivity extends AppCompatActivity {
         tvFinalTotal.setText(formatPrice(finalTotal));
     }
 
-    private void processPayment() {
-        // SỬA Ở ĐÂY: LUÔN CHUYỂN SANG QR PAYMENT KHÔNG CẦN KIỂM TRA
-        navigateToQRPayment();
-    }
-
     private void navigateToQRPayment() {
-        try {
-            // THÊM CODE NÀY: Chuyển sang QRPaymentActivity
-            Intent intent = new Intent(PaymentActivity.this, QRPaymentActivity.class);
-            intent.putExtra("FINAL_TOTAL", getFinalTotalAmount());
-
-            // Thêm các thông tin cần thiết khác nếu có
-            intent.putExtra("QUANTITY", quantity);
-            intent.putExtra("TOTAL_PRICE", totalPrice);
-
-            startActivity(intent);
-
-            // THÊM TOAST ĐỂ XÁC NHẬN
-            Toast.makeText(this, "Đang chuyển đến thanh toán QR...", Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-    }
-
-    private void navigateToCreditCardPayment() {
-        Toast.makeText(this, "Chức năng thanh toán thẻ đang phát triển", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, QRPaymentActivity.class);
+        intent.putExtra("FINAL_TOTAL", getFinalTotalAmount());
+        intent.putExtra("QUANTITY", quantity);
+        intent.putExtra("TOTAL_PRICE", totalPrice);
+        startActivity(intent);
     }
 
     private void confirmCODPayment() {
