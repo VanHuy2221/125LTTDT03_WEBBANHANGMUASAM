@@ -34,6 +34,7 @@
         <activity android:name=".OrderManagementActivity" />
         <activity android:name=".ReviewActivity" />
         <activity android:name=".CategoryProductsActivity" />
+        <activity android:name=".GlobalSearchActivity" />
         <activity android:name=".LoginActivity" />
     </application>
 

@@ -125,7 +125,7 @@ public class DatabaseHelper {
             "Apple",
             52990000,
             "MacBook Pro 14 inch với chip M2 Pro, màn hình Liquid Retina XDR và thời lượng pin lên đến 18 giờ.",
-            R.drawable.ic_laptop, // Tạm dùng icon
+            R.drawable.ic_laptop,
             5,
             "active",
             4.8f
@@ -165,6 +165,55 @@ public class DatabaseHelper {
             25,
             "active",
             4.3f
+        ));
+
+        // Thêm sản phẩm để test search
+        allProducts.add(new Product(
+            11, 2, 2,
+            "MacBook Air M2 13 inch",
+            "Apple",
+            28990000,
+            "MacBook Air M2 với thiết kế mỏng nhẹ, chip M2 mạnh mẽ và thời lượng pin cả ngày.",
+            R.drawable.ic_laptop,
+            12,
+            "active",
+            4.6f
+        ));
+
+        allProducts.add(new Product(
+            12, 2, 1,
+            "Xiaomi 13 Pro",
+            "Xiaomi",
+            18990000,
+            "Xiaomi 13 Pro với camera Leica, chip Snapdragon 8 Gen 2 và sạc nhanh 120W.",
+            R.drawable.ic_smartphone,
+            20,
+            "active",
+            4.3f
+        ));
+
+        allProducts.add(new Product(
+            13, 2, 3,
+            "Quần jeans nam Levi's",
+            "Levi's",
+            1290000,
+            "Quần jeans nam Levi's 501 Original Fit, chất liệu denim cao cấp, phong cách cổ điển.",
+            R.drawable.ic_fashion,
+            30,
+            "active",
+            4.4f
+        ));
+
+        allProducts.add(new Product(
+            14, 2, 4,
+            "Máy lọc không khí Xiaomi",
+            "Xiaomi",
+            3990000,
+            "Máy lọc không khí Xiaomi Mi Air Purifier 3H với công nghệ HEPA và điều khiển thông minh.",
+            R.drawable.ic_home,
+            15,
+            "active",
+            4.5f
         ));
         
         return allProducts;

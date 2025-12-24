@@ -120,7 +120,8 @@ public class HomeActivity extends AppCompatActivity {
             searchBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HomeActivity.this, SearchListActivity.class);
+                    // Chuyển đến GlobalSearchActivity để tìm kiếm trong tất cả danh mục
+                    Intent intent = new Intent(HomeActivity.this, GlobalSearchActivity.class);
                     startActivity(intent);
                 }
             });
