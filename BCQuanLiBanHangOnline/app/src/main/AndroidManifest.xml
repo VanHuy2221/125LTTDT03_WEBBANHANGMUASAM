@@ -35,6 +35,10 @@
         <activity android:name=".ReviewActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".HomeActivity" />
+        <activity android:name=".CategoryProductsActivity" />
+        <activity android:name=".GlobalSearchActivity" />
+        <activity android:name=".ExchangeActivity" />
+        <activity android:name=".CreProActivity" />
     </application>
 
 </manifest>
