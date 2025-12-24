@@ -2,7 +2,11 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,12 +18,16 @@ import java.util.List;
 
 public class CategoryProductsActivity extends AppCompatActivity {
     private TextView tvCategoryTitle;
+    private EditText etSearch;
+    private ImageView btnClearSearch;
     private RecyclerView rvProducts;
     private ProductAdapter productAdapter;
     private DatabaseHelper databaseHelper;
     
     private int categoryId;
     private String categoryName;
+    private List<Product> allCategoryProducts;
+    private List<Product> filteredProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,7 @@ public class CategoryProductsActivity extends AppCompatActivity {
             initDatabase();
             setupRecyclerView();
             loadProducts();
+            setupSearch();
             setupBackButton();
             
         } catch (Exception e) {
@@ -50,9 +59,11 @@ public class CategoryProductsActivity extends AppCompatActivity {
 
     private void initViews() {
         tvCategoryTitle = findViewById(R.id.tv_category_title);
+        etSearch = findViewById(R.id.et_search);
+        btnClearSearch = findViewById(R.id.btn_clear_search);
         rvProducts = findViewById(R.id.rv_products);
         
-        if (tvCategoryTitle == null || rvProducts == null) {
+        if (tvCategoryTitle == null || rvProducts == null || etSearch == null || btnClearSearch == null) {
             throw new RuntimeException("Cannot find required views in layout");
         }
     }
@@ -70,27 +81,32 @@ public class CategoryProductsActivity extends AppCompatActivity {
         tvCategoryTitle.setText(categoryName);
         
         try {
-            List<Product> products = databaseHelper.getProductsByCategory(categoryId);
+            allCategoryProducts = databaseHelper.getProductsByCategory(categoryId);
+            filteredProducts = allCategoryProducts;
             
-            if (products == null || products.isEmpty()) {
+            if (allCategoryProducts == null || allCategoryProducts.isEmpty()) {
                 // Nếu không có sản phẩm, hiển thị thông báo
                 tvCategoryTitle.setText(categoryName + " (Không có sản phẩm)");
                 return;
             }
             
-            productAdapter = new ProductAdapter(this, products);
-            productAdapter.setOnProductClickListener(new ProductAdapter.OnProductClickListener() {
-                @Override
-                public void onProductClick(Product product) {
-                    navigateToProductDetail(product);
-                }
-            });
-            rvProducts.setAdapter(productAdapter);
+            setupProductAdapter();
             
         } catch (Exception e) {
             e.printStackTrace();
             tvCategoryTitle.setText("Lỗi: " + e.getMessage());
         }
+    }
+
+    private void setupProductAdapter() {
+        productAdapter = new ProductAdapter(this, filteredProducts);
+        productAdapter.setOnProductClickListener(new ProductAdapter.OnProductClickListener() {
+            @Override
+            public void onProductClick(Product product) {
+                navigateToProductDetail(product);
+            }
+        });
+        rvProducts.setAdapter(productAdapter);
     }
 
     private void navigateToProductDetail(Product product) {
@@ -114,3 +130,71 @@ public class CategoryProductsActivity extends AppCompatActivity {
         }
     }
 }
+    private void setupSearch() {
+        // TextWatcher để theo dõi thay đổi text
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần xử lý
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = s.toString().trim();
+                
+                // Hiển thị/ẩn nút clear
+                if (query.isEmpty()) {
+                    btnClearSearch.setVisibility(View.GONE);
+                } else {
+                    btnClearSearch.setVisibility(View.VISIBLE);
+                }
+                
+                // Thực hiện search
+                performSearch(query);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần xử lý
+            }
+        });
+
+        // Nút clear search
+        btnClearSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etSearch.setText("");
+                etSearch.clearFocus();
+            }
+        });
+    }
+
+    private void performSearch(String query) {
+        if (allCategoryProducts == null) return;
+        
+        if (query.isEmpty()) {
+            // Nếu không có query, hiển thị tất cả sản phẩm trong category
+            filteredProducts = allCategoryProducts;
+        } else {
+            // Tìm kiếm trong category
+            filteredProducts = databaseHelper.searchProductsInCategory(categoryId, query);
+        }
+        
+        // Cập nhật adapter
+        if (productAdapter != null) {
+            productAdapter.updateData(filteredProducts);
+        } else {
+            setupProductAdapter();
+        }
+        
+        // Cập nhật title với số lượng kết quả
+        updateTitle(query);
+    }
+
+    private void updateTitle(String query) {
+        if (query.isEmpty()) {
+            tvCategoryTitle.setText(categoryName + " (" + allCategoryProducts.size() + " sản phẩm)");
+        } else {
+            tvCategoryTitle.setText(categoryName + " (" + filteredProducts.size() + " kết quả)");
+        }
+    }

@@ -191,7 +191,24 @@ public class DatabaseHelper {
         
         String lowerQuery = query.toLowerCase();
         for (Product product : allProducts) {
-            if (product.getProductName().toLowerCase().contains(lowerQuery)) {
+            if (product.getProductName().toLowerCase().contains(lowerQuery) ||
+                product.getBrand().toLowerCase().contains(lowerQuery)) {
+                searchResults.add(product);
+            }
+        }
+        
+        return searchResults;
+    }
+
+    // Tìm kiếm sản phẩm trong category cụ thể
+    public List<Product> searchProductsInCategory(int categoryId, String query) {
+        List<Product> categoryProducts = getProductsByCategory(categoryId);
+        List<Product> searchResults = new ArrayList<>();
+        
+        String lowerQuery = query.toLowerCase();
+        for (Product product : categoryProducts) {
+            if (product.getProductName().toLowerCase().contains(lowerQuery) ||
+                product.getBrand().toLowerCase().contains(lowerQuery)) {
                 searchResults.add(product);
             }
         }
