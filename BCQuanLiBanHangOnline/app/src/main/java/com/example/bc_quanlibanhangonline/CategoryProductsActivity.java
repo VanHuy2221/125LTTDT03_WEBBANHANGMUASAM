@@ -39,18 +39,29 @@ public class CategoryProductsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_products);
+        
+        try {
+            setContentView(R.layout.activity_category_products);
 
-        categoryId = getIntent().getIntExtra("CATEGORY_ID", -1);
-        categoryName = getIntent().getStringExtra("CATEGORY_NAME");
-        if (categoryName == null) categoryName = "Danh mục";
+            // Nhận dữ liệu từ Intent
+            categoryId = getIntent().getIntExtra("CATEGORY_ID", 1);
+            categoryName = getIntent().getStringExtra("CATEGORY_NAME");
 
-        initViews();
-        initDatabase();
-        setupRecyclerView();
-        loadProducts();
-        setupSearch();
-        setupBackButton();
+            if (categoryName == null) {
+                categoryName = "Danh mục";
+            }
+
+            initViews();
+            initDatabase();
+            setupRecyclerView();
+            loadProducts();
+            setupSearch();
+            setupBackButton();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            finish(); // Đóng activity nếu có lỗi
+        }
     }
 
     private void initViews() {
@@ -61,6 +72,11 @@ public class CategoryProductsActivity extends AppCompatActivity {
         layoutEmptyState = findViewById(R.id.layout_empty_state);
         tvEmptyMessage = findViewById(R.id.tv_empty_message);
         tvEmptySuggestion = findViewById(R.id.tv_empty_suggestion);
+        
+        if (tvCategoryTitle == null || rvProducts == null || etSearch == null || 
+            btnClearSearch == null || layoutEmptyState == null) {
+            throw new RuntimeException("Cannot find required views in layout");
+        }
     }
 
     private void initDatabase() {
