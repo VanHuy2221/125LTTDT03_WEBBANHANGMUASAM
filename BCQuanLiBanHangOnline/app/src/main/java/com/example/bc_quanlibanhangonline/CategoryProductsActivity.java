@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,6 +22,9 @@ public class CategoryProductsActivity extends AppCompatActivity {
     private EditText etSearch;
     private ImageView btnClearSearch;
     private RecyclerView rvProducts;
+    private LinearLayout layoutEmptyState;
+    private TextView tvEmptyMessage;
+    private TextView tvEmptySuggestion;
     private ProductAdapter productAdapter;
     private DatabaseHelper databaseHelper;
     
@@ -62,8 +66,12 @@ public class CategoryProductsActivity extends AppCompatActivity {
         etSearch = findViewById(R.id.et_search);
         btnClearSearch = findViewById(R.id.btn_clear_search);
         rvProducts = findViewById(R.id.rv_products);
+        layoutEmptyState = findViewById(R.id.layout_empty_state);
+        tvEmptyMessage = findViewById(R.id.tv_empty_message);
+        tvEmptySuggestion = findViewById(R.id.tv_empty_suggestion);
         
-        if (tvCategoryTitle == null || rvProducts == null || etSearch == null || btnClearSearch == null) {
+        if (tvCategoryTitle == null || rvProducts == null || etSearch == null || 
+            btnClearSearch == null || layoutEmptyState == null) {
             throw new RuntimeException("Cannot find required views in layout");
         }
     }
@@ -86,14 +94,18 @@ public class CategoryProductsActivity extends AppCompatActivity {
             
             if (allCategoryProducts == null || allCategoryProducts.isEmpty()) {
                 // Nếu không có sản phẩm, hiển thị thông báo
+                showEmptyState("Danh mục này chưa có sản phẩm nào", "Vui lòng quay lại sau");
                 tvCategoryTitle.setText(categoryName + " (Không có sản phẩm)");
                 return;
             }
             
             setupProductAdapter();
+            showProductList();
+            updateTitle("");
             
         } catch (Exception e) {
             e.printStackTrace();
+            showEmptyState("Có lỗi xảy ra", "Vui lòng thử lại sau");
             tvCategoryTitle.setText("Lỗi: " + e.getMessage());
         }
     }
@@ -129,7 +141,7 @@ public class CategoryProductsActivity extends AppCompatActivity {
             });
         }
     }
-}
+
     private void setupSearch() {
         // TextWatcher để theo dõi thay đổi text
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -180,11 +192,21 @@ public class CategoryProductsActivity extends AppCompatActivity {
             filteredProducts = databaseHelper.searchProductsInCategory(categoryId, query);
         }
         
-        // Cập nhật adapter
-        if (productAdapter != null) {
-            productAdapter.updateData(filteredProducts);
+        // Kiểm tra kết quả và hiển thị UI phù hợp
+        if (filteredProducts == null || filteredProducts.isEmpty()) {
+            if (query.isEmpty()) {
+                showEmptyState("Danh mục này chưa có sản phẩm nào", "Vui lòng quay lại sau");
+            } else {
+                showEmptyState("Không tìm thấy sản phẩm thích hợp", "Hãy thử tìm kiếm với từ khóa khác");
+            }
         } else {
-            setupProductAdapter();
+            showProductList();
+            // Cập nhật adapter
+            if (productAdapter != null) {
+                productAdapter.updateData(filteredProducts);
+            } else {
+                setupProductAdapter();
+            }
         }
         
         // Cập nhật title với số lượng kết quả
@@ -192,9 +214,34 @@ public class CategoryProductsActivity extends AppCompatActivity {
     }
 
     private void updateTitle(String query) {
-        if (query.isEmpty()) {
-            tvCategoryTitle.setText(categoryName + " (" + allCategoryProducts.size() + " sản phẩm)");
+        if (filteredProducts == null || filteredProducts.isEmpty()) {
+            if (query.isEmpty()) {
+                tvCategoryTitle.setText(categoryName + " (0 sản phẩm)");
+            } else {
+                tvCategoryTitle.setText(categoryName + " (0 kết quả)");
+            }
         } else {
-            tvCategoryTitle.setText(categoryName + " (" + filteredProducts.size() + " kết quả)");
+            if (query.isEmpty()) {
+                tvCategoryTitle.setText(categoryName + " (" + filteredProducts.size() + " sản phẩm)");
+            } else {
+                tvCategoryTitle.setText(categoryName + " (" + filteredProducts.size() + " kết quả)");
+            }
         }
     }
+    private void showEmptyState(String message, String suggestion) {
+        rvProducts.setVisibility(View.GONE);
+        layoutEmptyState.setVisibility(View.VISIBLE);
+        
+        if (tvEmptyMessage != null) {
+            tvEmptyMessage.setText(message);
+        }
+        if (tvEmptySuggestion != null) {
+            tvEmptySuggestion.setText(suggestion);
+        }
+    }
+
+    private void showProductList() {
+        rvProducts.setVisibility(View.VISIBLE);
+        layoutEmptyState.setVisibility(View.GONE);
+    }
+}
