@@ -3,112 +3,128 @@ package com.example.bc_quanlibanhangonline;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.bc_quanlibanhangonline.adapters.CategoryAdapter;
+import com.example.bc_quanlibanhangonline.adapters.ProductHorizontalAdapter;
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.Category;
+import com.example.bc_quanlibanhangonline.models.Product;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
+    private RecyclerView rvCategories;
+    private RecyclerView rvFeaturedProducts;
+    private RecyclerView rvRecommendedProducts;
+    
+    private CategoryAdapter categoryAdapter;
+    private ProductHorizontalAdapter featuredProductAdapter;
+    private ProductHorizontalAdapter recommendedProductAdapter;
+    
+    private DatabaseHelper databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        bottomNav = findViewById(R.id.bottom_nav);
-
-        // Xử lý sự kiện bottom navigation
+        initViews();
+        initDatabase();
+        setupRecyclerViews();
+        loadData();
         setupBottomNavigation();
-
-        // Xử lý sự kiện click vào sản phẩm
-        setupProductClickListeners();
-
-        // THÊM SỰ KIỆN CLICK CHO THANH TÌM KIẾM
         setupSearchBarClickListener();
-        // Xử lý sự kiện bottom navigation
+    }
 
+    private void initViews() {
+        bottomNav = findViewById(R.id.bottom_nav);
+        rvCategories = findViewById(R.id.rv_categories);
+        rvFeaturedProducts = findViewById(R.id.rv_featured_products);
+        rvRecommendedProducts = findViewById(R.id.rv_recommended_products);
+    }
 
+    private void initDatabase() {
+        databaseHelper = new DatabaseHelper(this);
+    }
+
+    private void setupRecyclerViews() {
+        // Setup Categories RecyclerView
+        GridLayoutManager categoryLayoutManager = new GridLayoutManager(this, 4);
+        rvCategories.setLayoutManager(categoryLayoutManager);
+        
+        // Setup Featured Products RecyclerView
+        LinearLayoutManager featuredLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvFeaturedProducts.setLayoutManager(featuredLayoutManager);
+        
+        // Setup Recommended Products RecyclerView
+        LinearLayoutManager recommendedLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvRecommendedProducts.setLayoutManager(recommendedLayoutManager);
+    }
+
+    private void loadData() {
+        // Load Categories
+        List<Category> categories = databaseHelper.getCategories();
+        categoryAdapter = new CategoryAdapter(this, categories);
+        categoryAdapter.setOnCategoryClickListener(new CategoryAdapter.OnCategoryClickListener() {
+            @Override
+            public void onCategoryClick(Category category) {
+                // Navigate to category products page
+                Intent intent = new Intent(HomeActivity.this, CategoryProductsActivity.class);
+                intent.putExtra("CATEGORY_ID", category.getCategoryId());
+                intent.putExtra("CATEGORY_NAME", category.getCategoryName());
+                startActivity(intent);
+            }
+        });
+        rvCategories.setAdapter(categoryAdapter);
+
+        // Load Featured Products
+        List<Product> featuredProducts = databaseHelper.getFeaturedProducts();
+        featuredProductAdapter = new ProductHorizontalAdapter(this, featuredProducts);
+        featuredProductAdapter.setOnProductClickListener(new ProductHorizontalAdapter.OnProductClickListener() {
+            @Override
+            public void onProductClick(Product product) {
+                navigateToProductDetail(product);
+            }
+        });
+        rvFeaturedProducts.setAdapter(featuredProductAdapter);
+
+        // Load Recommended Products
+        List<Product> recommendedProducts = databaseHelper.getRecommendedProducts();
+        recommendedProductAdapter = new ProductHorizontalAdapter(this, recommendedProducts);
+        recommendedProductAdapter.setOnProductClickListener(new ProductHorizontalAdapter.OnProductClickListener() {
+            @Override
+            public void onProductClick(Product product) {
+                navigateToProductDetail(product);
+            }
+        });
+        rvRecommendedProducts.setAdapter(recommendedProductAdapter);
+    }
+
+    private void navigateToProductDetail(Product product) {
+        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+        intent.putExtra("PRODUCT_NAME", product.getProductName());
+        intent.putExtra("PRODUCT_PRICE", (int) product.getPrice());
+        intent.putExtra("PRODUCT_DESCRIPTION", product.getDescription());
+        intent.putExtra("PRODUCT_IMAGE", product.getImageResource());
+        startActivity(intent);
     }
 
     private void setupSearchBarClickListener() {
-        // Tìm thanh tìm kiếm trong layout và thêm sự kiện click
         View searchBar = findViewById(R.id.search_bar);
         if (searchBar != null) {
             searchBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Chuyển sang SearchListActivity khi bấm vào thanh tìm kiếm
                     Intent intent = new Intent(HomeActivity.this, SearchListActivity.class);
                     startActivity(intent);
                 }
             });
         }
-    }
-
-    private void setupProductClickListeners() {
-        // Sản phẩm nổi bật - iPhone 14 Pro Max
-        CardView iphoneCard = findViewById(R.id.iphone_14_pro_max_card);
-        iphoneCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToProductDetail(
-                        "iPhone 14 Pro Max 128GB",
-                        25990000,
-                        "iPhone 14 Pro Max - Flagship đến từ Apple với chip A16 Bionic mạnh mẽ, màn hình Super Retina XDR 6.7 inch, camera chính 48MP và tính năng Dynamic Island độc đáo.",
-                        R.drawable.iphone_14_pro_max
-                );
-            }
-        });
-
-        // Sản phẩm nổi bật - Samsung Galaxy S23 Ultra
-        CardView samsungCard = findViewById(R.id.samsung_s23_ultra_card);
-        samsungCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToProductDetail(
-                        "Samsung Galaxy S23 Ultra 256GB",
-                        22990000,
-                        "Samsung Galaxy S23 Ultra - flagship Android với bút S-Pen, camera 200MP, chip Snapdragon 8 Gen 2 và màn hình Dynamic AMOLED 2X.",
-                        R.drawable.samsung_s23_ultra
-                );
-            }
-        });
-
-        // Sản phẩm đề xuất - AirPods Pro 2
-        CardView airpodsCard = findViewById(R.id.airpods_pro_2_card);
-        airpodsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToProductDetail(
-                        "AirPods Pro 2",
-                        5990000,
-                        "AirPods Pro 2 - tai nghe không dây Apple với chip H2, chống ồn chủ động cải tiến và thời lượng pin lên đến 30 giờ.",
-                        R.drawable.airpods_pro_2
-                );
-            }
-        });
-
-        // Sản phẩm đề xuất - Apple Watch Series 8
-        CardView watchCard = findViewById(R.id.apple_watch_8_card);
-        watchCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToProductDetail(
-                        "Apple Watch Series 8",
-                        10990000,
-                        "Apple Watch Series 8 - đồng hồ thông minh với tính năng đo nhiệt độ, cảm biến va chạm và màn hình Retina luôn bật.",
-                        R.drawable.apple_watch_8
-                );
-            }
-        });
-    }
-
-    private void navigateToProductDetail(String productName, int productPrice, String productDescription, int productImage) {
-        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-        intent.putExtra("PRODUCT_NAME", productName);
-        intent.putExtra("PRODUCT_PRICE", productPrice);
-        intent.putExtra("PRODUCT_DESCRIPTION", productDescription);
-        intent.putExtra("PRODUCT_IMAGE", productImage);
-        startActivity(intent);
     }
 
     private void setupBottomNavigation() {
