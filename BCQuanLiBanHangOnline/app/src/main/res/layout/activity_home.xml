@@ -191,114 +191,13 @@
                     android:padding="8dp"/>
             </LinearLayout>
 
-            <!-- 4 Danh mục -->
-            <LinearLayout
+            <!-- Danh mục RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="4"
-                android:padding="16dp">
-
-                <!-- Điện thoại -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_smartphone"
-                        app:tint="#2196F3"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Điện thoại"
-                        android:textSize="12sp"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp"/>
-                </LinearLayout>
-
-                <!-- Laptop -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_laptop"
-                        app:tint="#4CAF50"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Laptop"
-                        android:textSize="12sp"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp"/>
-                </LinearLayout>
-
-                <!-- Thời trang -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_fashion"
-                        app:tint="#FF9800"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Thời trang"
-                        android:textSize="12sp"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp"/>
-                </LinearLayout>
-
-                <!-- Gia dụng -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_home"
-                        app:tint="#9C27B0"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Gia dụng"
-                        android:textSize="12sp"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp"/>
-                </LinearLayout>
-            </LinearLayout>
+                android:padding="16dp"
+                android:clipToPadding="false" />
 
             <!-- Sản phẩm nổi bật -->
             <LinearLayout
@@ -327,166 +226,15 @@
                     android:padding="8dp"/>
             </LinearLayout>
 
-            <!-- 2 sản phẩm nổi bật -->
-            <LinearLayout
+            <!-- Sản phẩm nổi bật RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_featured_products"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="12dp"
                 android:paddingStart="12dp"
-                android:paddingBottom="12dp">
-
-                <!-- iPhone 14 Pro Max -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/iphone_14_pro_max_card"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <!-- Ảnh -->
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:src="@drawable/iphone_14_pro_max"
-                            android:scaleType="centerInside"
-                            android:background="#F5F5F5"
-                            android:contentDescription="iPhone 14 Pro Max"/>
-
-                        <!-- Tên -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="iPhone 14 Pro Max 128GB phiên bản đặc biệt siêu dài"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="#212121"
-                            android:maxLines="2"
-                            android:ellipsize="end"
-                            android:layout_marginTop="8dp"/>
-
-                        <!-- Giá -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="25.990.000đ"
-                            android:textColor="#D32F2F"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="6dp"/>
-
-                        <!-- Rating -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="6dp">
-
-                            <RatingBar
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:numStars="5"
-                                android:rating="4.5"
-                                android:stepSize="0.5"
-                                android:isIndicator="true"
-                                style="?android:attr/ratingBarStyleSmall"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="4.5"
-                                android:textSize="12sp"
-                                android:textColor="#757575"
-                                android:layout_marginStart="6dp"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Samsung Galaxy S23 Ultra -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/samsung_s23_ultra_card"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:src="@drawable/samsung_s23_ultra"
-                            android:scaleType="centerInside"
-                            android:background="#F5F5F5"
-                            android:contentDescription="Samsung Galaxy S23 Ultra"/>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Samsung Galaxy S23 Ultra 256GB"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="#212121"
-                            android:maxLines="2"
-                            android:ellipsize="end"
-                            android:layout_marginTop="8dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="22.990.000đ"
-                            android:textColor="#D32F2F"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="6dp"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="6dp">
-
-                            <RatingBar
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:numStars="5"
-                                android:rating="4.0"
-                                android:stepSize="0.5"
-                                android:isIndicator="true"
-                                style="?android:attr/ratingBarStyleSmall"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="4.0"
-                                android:textSize="12sp"
-                                android:textColor="#757575"
-                                android:layout_marginStart="6dp"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
+                android:paddingEnd="12dp"
+                android:paddingBottom="12dp"
+                android:clipToPadding="false" />
 
 
             <!-- Sản phẩm đề xuất -->
@@ -516,170 +264,16 @@
                     android:padding="8dp"/>
             </LinearLayout>
 
-            <!-- 2 sản phẩm đề xuất -->
-            <LinearLayout
+            <!-- Sản phẩm đề xuất RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recommended_products"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="12dp"
                 android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 android:paddingBottom="12dp"
-                android:layout_marginBottom="80dp">
-
-                <!-- AirPods Pro 2 -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/airpods_pro_2_card"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <!-- Ảnh -->
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:src="@drawable/airpods_pro_2"
-                            android:scaleType="centerInside"
-                            android:background="#F5F5F5"
-                            android:contentDescription="AirPods Pro 2"/>
-
-                        <!-- Tên -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="AirPods Pro 2 thế hệ mới với nhiều tính năng nâng cao"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="#212121"
-                            android:maxLines="2"
-                            android:ellipsize="end"
-                            android:layout_marginTop="8dp"/>
-
-                        <!-- Giá -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5.990.000đ"
-                            android:textColor="#D32F2F"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="6dp"/>
-
-                        <!-- Rating -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="6dp">
-
-                            <RatingBar
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:numStars="5"
-                                android:rating="5.0"
-                                android:stepSize="0.5"
-                                android:isIndicator="true"
-                                style="?android:attr/ratingBarStyleSmall"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="5.0"
-                                android:textSize="12sp"
-                                android:textColor="#757575"
-                                android:layout_marginStart="6dp"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Apple Watch Series 8 -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/apple_watch_8_card"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <!-- Ảnh -->
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:src="@drawable/apple_watch_8"
-                            android:scaleType="centerInside"
-                            android:background="#F5F5F5"
-                            android:contentDescription="Apple Watch Series 8"/>
-
-                        <!-- Tên -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Apple Watch Series 8 phiên bản GPS + Cellular"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="#212121"
-                            android:maxLines="2"
-                            android:ellipsize="end"
-                            android:layout_marginTop="8dp"/>
-
-                        <!-- Giá -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10.990.000đ"
-                            android:textColor="#D32F2F"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="6dp"/>
-
-                        <!-- Rating -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="6dp">
-
-                            <RatingBar
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:numStars="5"
-                                android:rating="4.5"
-                                android:stepSize="0.5"
-                                android:isIndicator="true"
-                                style="?android:attr/ratingBarStyleSmall"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="4.5"
-                                android:textSize="12sp"
-                                android:textColor="#757575"
-                                android:layout_marginStart="6dp"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
+                android:layout_marginBottom="80dp"
+                android:clipToPadding="false" />
 
 
         </LinearLayout>
