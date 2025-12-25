@@ -38,6 +38,7 @@
         <activity android:name=".GlobalSearchActivity" />
         <activity android:name=".ExchangeActivity" />
         <activity android:name=".CreProActivity" />
+        <activity android:name=".SellerProfileActivity" />
     </application>
 
 </manifest>

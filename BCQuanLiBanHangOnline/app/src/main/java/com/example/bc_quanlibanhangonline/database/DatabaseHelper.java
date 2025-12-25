@@ -456,4 +456,13 @@ public class DatabaseHelper {
         }
         return null; // không tìm thấy
     }
+
+    public void updateOrderStatus(int orderId, String newStatus) {
+        for (Order o : orders) {
+            if (o.getOrderId() == orderId) {
+                o.setStatus(newStatus);
+                break;
+            }
+        }
+    }
 }
