@@ -47,6 +47,7 @@
                     android:layout_marginStart="16dp"
                     android:gravity="center_vertical">
 
+                    <!-- Tên và loại tài khoản -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -58,48 +59,33 @@
                             android:id="@+id/txtUserName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Shop XYZ"
+                            android:text="Đang tải..."
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/txtUserType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Thành viên"
-                            android:textColor="#666666"
+                            android:text="Người bán"
+                            android:textColor="#FF9800"
                             android:textSize="12sp"
                             android:background="@drawable/member_badge"
                             android:paddingHorizontal="8dp"
                             android:paddingVertical="2dp"
-                            android:layout_marginStart="8dp" />
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <!-- Thông tin bổ sung -->
+                    <TextView
+                        android:id="@+id/txtShopInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 Người theo dõi"
-                            android:textColor="#666666"
-                            android:textSize="14sp" />
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="12dp"
-                            android:background="#DDDDDD"
-                            android:layout_marginHorizontal="8dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3 Đang theo dõi"
-                            android:textColor="#666666"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                        android:text="Chào mừng đến với gian hàng của bạn!"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
             </LinearLayout>
 
