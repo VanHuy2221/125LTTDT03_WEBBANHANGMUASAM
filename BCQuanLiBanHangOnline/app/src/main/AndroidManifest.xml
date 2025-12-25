@@ -40,6 +40,8 @@
         <activity android:name=".CreProActivity" />
         <activity android:name=".SellerProfileActivity" />
         <activity android:name=".UnProfileActivity" />
+        <activity android:name=".admin.AdminDashboardActivity" />
+        <activity android:name=".admin.UserManagementActivity" />
     </application>
 
 </manifest>
