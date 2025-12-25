@@ -42,4 +42,7 @@ public class Order {
     public String getPaymentMethod() { return paymentMethod; }
     public String getStatus() { return status; }
     public String getOrderDate() { return orderDate; }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

@@ -298,7 +298,7 @@ public class DatabaseHelper {
                 totalPrice,
                 orderType,           // orderType
                 paymentMethod,
-                "processing",        // status mặc định
+                "chờ duyệt",        // status mặc định
                 orderDate
         );
 
@@ -429,5 +429,22 @@ public class DatabaseHelper {
                 break;
             }
         }
+    }
+
+    public boolean cancelOrder(int orderId) {
+        for (Order order : orders) {
+            if (order.getOrderId() == orderId) {
+                if ("chờ duyệt".equalsIgnoreCase(order.getStatus())) {
+                    // hủy đơn
+                    // cần setter trong Order
+                    order.setStatus("đã hủy");
+                    return true;
+                } else {
+                    // không thể hủy
+                    return false;
+                }
+            }
+        }
+        return false; // không tìm thấy
     }
 }

@@ -14,6 +14,7 @@ import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
 import com.example.bc_quanlibanhangonline.models.Order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderTrackingActivity extends AppCompatActivity {
@@ -35,11 +36,16 @@ public class OrderTrackingActivity extends AppCompatActivity {
         db = new DatabaseHelper(this);
 
         // userId giả lập = 1
-        List<Order> orders = db.getOrdersByUser(3);
+        List<Order> allOrders = db.getOrdersByUser(3);
+        List<Order> activeOrders = new ArrayList<>();
 
-        Log.d("ORDER", "Orders size = " + orders.size());
+        for (Order order : allOrders) {
+            if (!"cancelled".equalsIgnoreCase(order.getStatus())) {
+                activeOrders.add(order);
+            }
+        }
 
-        adapter = new OrderAdapter(this, orders);
+        adapter = new OrderAdapter(this, activeOrders, db);
         recyclerView.setAdapter(adapter);
 
         setupBottomNavigation();
