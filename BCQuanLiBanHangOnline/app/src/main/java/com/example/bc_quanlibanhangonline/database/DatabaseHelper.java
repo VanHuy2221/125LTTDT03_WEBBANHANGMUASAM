@@ -4,14 +4,26 @@ import android.content.Context;
 
 import com.example.bc_quanlibanhangonline.R;
 import com.example.bc_quanlibanhangonline.models.Category;
+import com.example.bc_quanlibanhangonline.models.ExchangeRequest;
+import com.example.bc_quanlibanhangonline.models.OrderDetail;
+import com.example.bc_quanlibanhangonline.models.Payment;
 import com.example.bc_quanlibanhangonline.models.Product;
+import com.example.bc_quanlibanhangonline.models.Order;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
 
 public class DatabaseHelper {
     private Context context;
 
+    private static final List<Order> orders = new ArrayList<>();
+    private static final List<OrderDetail> orderDetails = new ArrayList<>();
+    private static final List<Payment> payments = new ArrayList<>();
+    private static final List<ExchangeRequest> exchangeRequests = new ArrayList<>();
     public DatabaseHelper(Context context) {
         this.context = context;
     }
@@ -265,5 +277,157 @@ public class DatabaseHelper {
         }
         
         return searchResults;
+    }
+
+    public Order createOrder(
+            int userId,
+            int totalPrice,
+            String orderType,       // normal | exchange
+            String paymentMethod
+    ) {
+        int orderId = (int) (System.currentTimeMillis() / 1000); // tạo id từ timestamp
+
+        String orderDate = new SimpleDateFormat(
+                "dd/MM/yyyy", Locale.getDefault()
+        ).format(new Date());
+
+        Order order = new Order(
+                orderId,
+                userId,
+                null,                // exchangeId
+                totalPrice,
+                orderType,           // orderType
+                paymentMethod,
+                "processing",        // status mặc định
+                orderDate
+        );
+
+        orders.add(order);
+        return order;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public ExchangeRequest createExchange(
+            String productName,
+            String exchangeItemName,
+            String message
+    ) {
+        String exchangeId = "EX" + System.currentTimeMillis();
+
+        ExchangeRequest exchange = new ExchangeRequest(
+                exchangeId,
+                productName,
+                exchangeItemName,
+                message,
+                "Đang chờ phản hồi"
+        );
+
+        exchangeRequests.add(exchange);
+        return exchange;
+    }
+
+    public List<ExchangeRequest> getExchangeRequests() {
+        return exchangeRequests;
+    }
+
+    public List<Order> getOrdersByUser(int userId) {
+        List<Order> result = new ArrayList<>();
+
+        for (Order order : orders) {
+            if (order.getUserId() == userId) {
+                result.add(order);
+            }
+        }
+
+        return result;
+    }
+
+    public OrderDetail createOrderDetailByName(
+            int orderId,
+            String productName,
+            int quantity,
+            int price
+    ) {
+        int orderDetailId = orderDetails.size() + 1;
+        int productId = -1;
+
+        // tìm productId từ productName
+        for (Product product : getAllProducts()) {
+            if (product.getProductName().equalsIgnoreCase(productName)) {
+                productId = product.getProductId();
+                break;
+            }
+        }
+
+        OrderDetail detail = new OrderDetail(
+                orderDetailId,
+                orderId,
+                productId,
+                quantity,
+                price
+        );
+
+        orderDetails.add(detail);
+        return detail;
+    }
+
+    public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
+        List<OrderDetail> result = new ArrayList<>();
+
+        for (OrderDetail detail : orderDetails) {
+            if (detail.getOrderId() == orderId) {
+                result.add(detail);
+            }
+        }
+        return result;
+    }
+
+    public Payment createPayment(
+            int orderId,
+            String paymentMethod,
+            String paymentStatus
+    ) {
+        int paymentId = payments.size() + 1;
+
+        String paymentDate = new SimpleDateFormat(
+                "dd/MM/yyyy HH:mm",
+                Locale.getDefault()
+        ).format(new Date());
+
+        Payment payment = new Payment(
+                paymentId,
+                orderId,
+                paymentMethod,
+                paymentStatus,
+                paymentDate
+        );
+
+        payments.add(payment);
+        return payment;
+    }
+
+    public Payment getPaymentByOrderId(int orderId) {
+        for (Payment payment : payments) {
+            if (payment.getOrderId() == orderId) {
+                return payment;
+            }
+        }
+        return null;
+    }
+
+    public void updateProductQuantity(int productId, int quantity) {
+        for (Product product : getAllProducts()) {
+            if (product.getProductId() == productId) {
+                int newQuantity = product.getQuantity() - quantity;
+                if (newQuantity < 0) {
+                    newQuantity = 0; // tránh âm
+                }
+                product.setQuantity(newQuantity); // cần setter trong Product
+                break;
+            }
+        }
     }
 }

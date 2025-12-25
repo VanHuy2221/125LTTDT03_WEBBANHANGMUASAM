@@ -11,7 +11,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.Order;
+import com.example.bc_quanlibanhangonline.models.Product;
+
 public class PaymentActivity extends AppCompatActivity {
+    private DatabaseHelper databaseHelper;
+    private String productName;
 
     private TextView tvFinalTotal;
     private Button btnProcessPayment;
@@ -26,7 +32,8 @@ public class PaymentActivity extends AppCompatActivity {
     private RadioButton radioQR, radioCreditCard, radioCOD;
 
     private int quantity;
-    private int totalPrice;
+    private int productTotal;
+    private int finalTotal;
     private final int shippingFee = 30000;
     private final int discount = 500000;
 
@@ -37,7 +44,10 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         quantity = intent.getIntExtra("QUANTITY", 1);
-        totalPrice = intent.getIntExtra("TOTAL_PRICE", 25990000);
+        productTotal = intent.getIntExtra("TOTAL_PRICE", 0);
+        productName = intent.getStringExtra("PRODUCT_NAME");
+
+        databaseHelper = new DatabaseHelper(this);
 
         initViews();
         setupEvents();
@@ -64,8 +74,9 @@ public class PaymentActivity extends AppCompatActivity {
         paymentMethodGroup.setVisibility(RadioGroup.VISIBLE);
     }
 
-    private void setupEvents() {
 
+
+    private void setupEvents() {
         btnBack.setOnClickListener(v -> finish());
 
         // Chọn Mua bằng tiền / Trao đổi
@@ -84,35 +95,25 @@ public class PaymentActivity extends AppCompatActivity {
 
         // Xử lý nút xác nhận phương thức
         btnProcessPayment.setOnClickListener(v -> {
-            // Trao đổi sản phẩm
             if (radioExchange.isChecked()) {
                 Intent intent = new Intent(PaymentActivity.this, ExchangeActivity.class);
+                intent.putExtra("PRODUCT_NAME", productName);
                 startActivity(intent);
                 return;
             }
 
-            // Mua bằng tiền
             if (radioBuyMoney.isChecked()) {
                 if (radioQR.isChecked()) {
-                    Intent intent = new Intent(PaymentActivity.this, QRPaymentActivity.class);
-                    intent.putExtra("FINAL_TOTAL", totalPrice + shippingFee - discount);
-                    intent.putExtra("QUANTITY", quantity);
-                    intent.putExtra("TOTAL_PRICE", totalPrice);
-                    startActivity(intent);
+                    processOrder("cad"); // thanh toán QR
                 } else if (radioCreditCard.isChecked()) {
-                    Toast.makeText(this, "Thanh toán thẻ đang phát triển", Toast.LENGTH_SHORT).show();
+                    processOrder("banking"); // thanh toán thẻ
                 } else if (radioCOD.isChecked()) {
-                    Intent intent = new Intent(PaymentActivity.this, PaymentSuccessActivity.class);
-                    intent.putExtra("ORDER_TOTAL", totalPrice + shippingFee - discount);
-                    intent.putExtra("PAYMENT_METHOD", "COD");
-                    startActivity(intent);
-                    finish();
+                    processOrder("cash"); // thanh toán khi nhận hàng
                 } else {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
 
     // Đảm bảo chỉ 1 RadioButton được chọn
@@ -124,11 +125,54 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void calculateFinalTotal() {
-        int finalTotal = totalPrice + shippingFee - discount;
+        finalTotal = productTotal + shippingFee - discount;
         tvFinalTotal.setText(formatPrice(finalTotal));
     }
 
     private String formatPrice(int price) {
         return String.format("%,dđ", price).replace(",", ".");
     }
+
+    private void processOrder(String paymentMethod) {
+        int userId = 3; // giả lập userId, sau này thay bằng session thật
+
+        // 1️⃣ Validate số lượng đặt
+        Product product = databaseHelper.getAllProducts()
+                .stream()
+                .filter(p -> p.getProductName().equals(productName))
+                .findFirst()
+                .orElse(null);
+
+        if (product == null) {
+            Toast.makeText(this, "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (quantity > product.getQuantity()) {
+            Toast.makeText(this, "Số lượng đặt vượt quá tồn kho", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 2️⃣ Tạo order
+        Order order = databaseHelper.createOrder(userId, finalTotal, "normal", paymentMethod);
+
+        // 3️⃣ Tạo order detail
+        databaseHelper.createOrderDetailByName(order.getOrderId(), productName, quantity, productTotal);
+
+        // 4️⃣ Tạo payment
+        databaseHelper.createPayment(order.getOrderId(), paymentMethod, "paid");
+
+        // 5️⃣ Giảm tồn kho
+        databaseHelper.updateProductQuantity(product.getProductId(), quantity);
+
+        // 6️⃣ Chuyển sang PaymentSuccessActivity
+        Intent intent = new Intent(this, PaymentSuccessActivity.class);
+        intent.putExtra("ORDER_ID", order.getOrderId());
+        intent.putExtra("ORDER_TOTAL", order.getTotalPrice());
+        intent.putExtra("PAYMENT_METHOD", order.getPaymentMethod());
+        intent.putExtra("ORDER_DATE", order.getOrderDate());
+        startActivity(intent);
+        finish();
+    }
+
 }

@@ -12,9 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.ExchangeRequest;
+
 public class ExchangeActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
+
+    private DatabaseHelper databaseHelper;
+    private String targetProductName;
 
     private EditText edtProductName, edtDescription, edtEstimatedPrice;
     private ImageView imgProduct;
@@ -26,6 +32,11 @@ public class ExchangeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
+
+        databaseHelper = new DatabaseHelper(this);
+
+        Intent intent = getIntent();
+        targetProductName = intent.getStringExtra("PRODUCT_NAME");
 
         initViews();
         setupEvents();
@@ -77,11 +88,22 @@ public class ExchangeActivity extends AppCompatActivity {
             return;
         }
 
-        // GIẢ LẬP gửi đề nghị
+        ExchangeRequest exchange = databaseHelper.createExchange(
+                targetProductName,
+                name,
+                desc
+        );
+
         Toast.makeText(this,
                 "Đã gửi đề nghị trao đổi, chờ người bán phản hồi",
                 Toast.LENGTH_LONG).show();
 
+        Intent intent = new Intent(this, PaymentSuccessActivity.class);
+        intent.putExtra("ORDER_ID", exchange.getExchangeId());
+        intent.putExtra("ORDER_TOTAL", 0);
+        intent.putExtra("PAYMENT_METHOD", "Trao đổi");
+        intent.putExtra("ORDER_DATE", "Hôm nay");
+        startActivity(intent);
         finish();
     }
 }
