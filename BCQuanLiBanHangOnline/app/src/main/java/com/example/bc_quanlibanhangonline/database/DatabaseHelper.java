@@ -1,6 +1,8 @@
 package com.example.bc_quanlibanhangonline.database;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.bc_quanlibanhangonline.R;
 import com.example.bc_quanlibanhangonline.models.Category;
@@ -283,7 +285,8 @@ public class DatabaseHelper {
             int userId,
             int totalPrice,
             String orderType,       // normal | exchange
-            String paymentMethod
+            String paymentMethod,
+            String status
     ) {
         int orderId = (int) (System.currentTimeMillis() / 1000); // tạo id từ timestamp
 
@@ -298,7 +301,7 @@ public class DatabaseHelper {
                 totalPrice,
                 orderType,           // orderType
                 paymentMethod,
-                "chờ duyệt",        // status mặc định
+                status,        // status mặc định
                 orderDate
         );
 
@@ -434,17 +437,23 @@ public class DatabaseHelper {
     public boolean cancelOrder(int orderId) {
         for (Order order : orders) {
             if (order.getOrderId() == orderId) {
-                if ("chờ duyệt".equalsIgnoreCase(order.getStatus())) {
-                    // hủy đơn
-                    // cần setter trong Order
-                    order.setStatus("đã hủy");
+                if ("processing".equalsIgnoreCase(order.getStatus())) {
+                    order.setStatus("cancelled");
                     return true;
                 } else {
-                    // không thể hủy
                     return false;
                 }
             }
         }
-        return false; // không tìm thấy
+        return false;
+    }
+
+    public Product getProductById(int productId) {
+        for (Product product : getAllProducts()) {
+            if (product.getProductId() == productId) {
+                return product;
+            }
+        }
+        return null; // không tìm thấy
     }
 }

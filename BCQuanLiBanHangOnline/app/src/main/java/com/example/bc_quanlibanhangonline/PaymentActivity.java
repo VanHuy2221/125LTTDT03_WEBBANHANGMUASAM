@@ -96,19 +96,17 @@ public class PaymentActivity extends AppCompatActivity {
         // Xử lý nút xác nhận phương thức
         btnProcessPayment.setOnClickListener(v -> {
             if (radioExchange.isChecked()) {
-                Intent intent = new Intent(PaymentActivity.this, ExchangeActivity.class);
-                intent.putExtra("PRODUCT_NAME", productName);
-                startActivity(intent);
+                processOrder("exchange", true); // order trao đổi
                 return;
             }
 
             if (radioBuyMoney.isChecked()) {
                 if (radioQR.isChecked()) {
-                    processOrder("cad"); // thanh toán QR
+                    processOrder("cad", false); // thanh toán QR
                 } else if (radioCreditCard.isChecked()) {
-                    processOrder("banking"); // thanh toán thẻ
+                    processOrder("banking", false); // thanh toán thẻ
                 } else if (radioCOD.isChecked()) {
-                    processOrder("cash"); // thanh toán khi nhận hàng
+                    processOrder("cash", false); // thanh toán khi nhận hàng
                 } else {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                 }
@@ -133,10 +131,9 @@ public class PaymentActivity extends AppCompatActivity {
         return String.format("%,dđ", price).replace(",", ".");
     }
 
-    private void processOrder(String paymentMethod) {
+    private void processOrder(String paymentMethod, boolean isExchange) {
         int userId = 3; // giả lập userId, sau này thay bằng session thật
 
-        // 1️⃣ Validate số lượng đặt
         Product product = databaseHelper.getAllProducts()
                 .stream()
                 .filter(p -> p.getProductName().equals(productName))
@@ -148,24 +145,35 @@ public class PaymentActivity extends AppCompatActivity {
             return;
         }
 
-        if (quantity > product.getQuantity()) {
+        if (!isExchange && quantity > product.getQuantity()) {
             Toast.makeText(this, "Số lượng đặt vượt quá tồn kho", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 2️⃣ Tạo order
-        Order order = databaseHelper.createOrder(userId, finalTotal, "normal", paymentMethod);
+        // Xác định status
+        String orderType = isExchange ? "exchange" : "normal";
+        String orderStatus;
+        if (paymentMethod.equals("cash") || orderType.equals("exchange")) {
+            orderStatus = "processing"; // chờ duyệt
+        } else {
+            orderStatus = "paid"; // QR / CreditCard
+        }
 
-        // 3️⃣ Tạo order detail
-        databaseHelper.createOrderDetailByName(order.getOrderId(), productName, quantity, productTotal);
+        // Tạo order
+        Order order = databaseHelper.createOrder(userId, finalTotal, orderType, paymentMethod, orderStatus);
 
-        // 4️⃣ Tạo payment
-        databaseHelper.createPayment(order.getOrderId(), paymentMethod, "paid");
+        if (!isExchange) {
+            // Tạo order detail
+            databaseHelper.createOrderDetailByName(order.getOrderId(), productName, quantity, productTotal);
 
-        // 5️⃣ Giảm tồn kho
-        databaseHelper.updateProductQuantity(product.getProductId(), quantity);
+            // Giảm tồn kho
+            databaseHelper.updateProductQuantity(product.getProductId(), quantity);
+        }
 
-        // 6️⃣ Chuyển sang PaymentSuccessActivity
+        // Tạo payment
+        databaseHelper.createPayment(order.getOrderId(), paymentMethod, orderStatus.equals("paid") ? "paid" : "pending");
+
+        // Chuyển sang PaymentSuccessActivity
         Intent intent = new Intent(this, PaymentSuccessActivity.class);
         intent.putExtra("ORDER_ID", order.getOrderId());
         intent.putExtra("ORDER_TOTAL", order.getTotalPrice());
@@ -174,5 +182,4 @@ public class PaymentActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 }

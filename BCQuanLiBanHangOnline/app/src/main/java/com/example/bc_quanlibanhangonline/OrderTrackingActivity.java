@@ -35,7 +35,6 @@ public class OrderTrackingActivity extends AppCompatActivity {
 
         db = new DatabaseHelper(this);
 
-        // userId giả lập = 1
         List<Order> allOrders = db.getOrdersByUser(3);
         List<Order> activeOrders = new ArrayList<>();
 

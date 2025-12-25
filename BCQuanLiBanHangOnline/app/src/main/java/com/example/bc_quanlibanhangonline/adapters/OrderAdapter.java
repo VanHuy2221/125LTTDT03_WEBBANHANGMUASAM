@@ -17,6 +17,7 @@ import com.example.bc_quanlibanhangonline.R;
 import com.example.bc_quanlibanhangonline.ReviewActivity;
 import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
 import com.example.bc_quanlibanhangonline.models.Order;
+import com.example.bc_quanlibanhangonline.models.OrderDetail;
 
 import java.util.List;
 
@@ -46,53 +47,66 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         holder.txtOrderId.setText("Đơn hàng #" + order.getOrderId());
 
+        // ===== Lấy tên sản phẩm từ OrderDetail =====
+        List<OrderDetail> details = databaseHelper.getOrderDetailsByOrderId(order.getOrderId());
+        String productNames = "";
+        for (OrderDetail detail : details) {
+            if (!productNames.isEmpty()) productNames += ", ";
+            productNames += databaseHelper.getProductById(detail.getProductId()).getProductName();
+        }
         holder.txtProductName.setText(
                 order.getOrderType().equals("exchange")
-                        ? "Đơn trao đổi"
-                        : "Đơn mua hàng"
+                        ? "Đơn trao đổi: " + productNames
+                        : "Mua hàng: " + productNames
         );
 
+        // ===== Tổng tiền =====
         holder.txtTotal.setText(formatPrice(order.getTotalPrice()));
 
-        // Hiển thị trạng thái và màu
+        // ===== Trạng thái & màu =====
         switch (order.getStatus().toLowerCase()) {
             case "processing":
                 holder.txtStatus.setText("Đang xử lý");
                 holder.txtStatus.setTextColor(Color.parseColor("#FF9800"));
-                holder.btnCancel.setEnabled(true);
+                holder.btnCancel.setVisibility(View.VISIBLE);
+                break;
+            case "paid":
+                holder.txtStatus.setText("Đã thanh toán");
+                holder.txtStatus.setTextColor(Color.parseColor("#4CAF50"));
+                holder.btnCancel.setVisibility(View.GONE);
                 break;
             case "shipping":
                 holder.txtStatus.setText("Đang giao");
                 holder.txtStatus.setTextColor(Color.parseColor("#2196F3"));
-                holder.btnCancel.setEnabled(false);
+                holder.btnCancel.setVisibility(View.GONE);
                 break;
             case "completed":
                 holder.txtStatus.setText("Hoàn tất");
                 holder.txtStatus.setTextColor(Color.parseColor("#4CAF50"));
-                holder.btnCancel.setEnabled(false);
+                holder.btnCancel.setVisibility(View.GONE);
                 break;
             case "cancelled":
                 holder.txtStatus.setText("Đã hủy");
                 holder.txtStatus.setTextColor(Color.parseColor("#F44336"));
-                holder.btnCancel.setEnabled(false);
+                holder.btnCancel.setVisibility(View.GONE);
                 break;
         }
 
-        // Xử lý click xem chi tiết / đánh giá
+        // ===== Xem chi tiết / đánh giá =====
         holder.btnEvaluate.setOnClickListener(v -> {
             Intent intent = new Intent(context, ReviewActivity.class);
             intent.putExtra("ORDER_ID", order.getOrderId());
             context.startActivity(intent);
         });
 
-        // Xử lý hủy đơn
+        // ===== Hủy đơn =====
         holder.btnCancel.setOnClickListener(v -> {
-            if ("chờ duyệt".equalsIgnoreCase(order.getStatus())) {
+            if ("processing".equalsIgnoreCase(order.getStatus())) {
                 boolean cancelled = databaseHelper.cancelOrder(order.getOrderId());
                 if (cancelled) {
                     order.setStatus("cancelled");
                     Toast.makeText(context, "Đơn hàng đã được hủy", Toast.LENGTH_SHORT).show();
-                    notifyItemChanged(position); // cập nhật UI
+                    notifyItemChanged(position);
                 } else {
                     Toast.makeText(context, "Không thể hủy đơn này", Toast.LENGTH_SHORT).show();
                 }
@@ -101,6 +115,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             }
         });
     }
+
 
 
 
