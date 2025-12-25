@@ -43,8 +43,9 @@
         <activity android:name=".admin.AdminDashboardActivity" />
         <activity android:name=".admin.UserManagementActivity" />
         <activity android:name=".ExchangeSuccessActivity" />
-
-
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ExchangeDetailActivity" />
+        <activity android:name=".ExchangeDetailForBuyerActivity" />
     </application>
 
 </manifest>

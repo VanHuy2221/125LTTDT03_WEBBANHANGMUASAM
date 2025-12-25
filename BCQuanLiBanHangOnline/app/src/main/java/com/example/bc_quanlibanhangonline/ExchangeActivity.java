@@ -37,6 +37,9 @@ public class ExchangeActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private String targetProductName;
 
+    // THÊM: Lấy userId từ Intent
+    private int currentUserId = -1;
+
     private EditText edtProductName, edtDescription, edtEstimatedPrice;
     private ImageView imgProduct;
     private Button btnSubmitExchange;
@@ -52,6 +55,9 @@ public class ExchangeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         targetProductName = intent.getStringExtra("PRODUCT_NAME");
+
+        // THÊM: Lấy userId từ Intent
+        currentUserId = intent.getIntExtra("USER_ID", -1);
 
         initViews();
         setupEvents();
@@ -300,8 +306,6 @@ public class ExchangeActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "❌ Lỗi tạo ảnh mẫu", Toast.LENGTH_SHORT).show();
-                    // Fallback: tạo ảnh tự động
                     createAutoImage();
                 });
                 e.printStackTrace();
@@ -444,7 +448,6 @@ public class ExchangeActivity extends AppCompatActivity {
             Toast.makeText(this, "✅ Đã tạo ảnh mẫu tự động", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            Toast.makeText(this, "❌ Lỗi tạo ảnh tự động", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -527,23 +530,61 @@ public class ExchangeActivity extends AppCompatActivity {
     }
 
     private void createExchangeRequest(String name, String desc, String price) {
-        ExchangeRequest exchange = databaseHelper.createExchange(
-                targetProductName,
-                name,
-                desc
-        );
+        try {
+            // Đảm bảo có userId
+            if (currentUserId == -1) {
+                Toast.makeText(this, "Vui lòng đăng nhập để gửi yêu cầu", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        Toast.makeText(this,
-                "Đã gửi đề nghị trao đổi, chờ người bán phản hồi",
-                Toast.LENGTH_LONG).show();
+            // 1. Tạo ExchangeRequest với userId
+            ExchangeRequest exchange = databaseHelper.createExchange(
+                    targetProductName,
+                    name,
+                    desc,
+                    currentUserId  // TRUYỀN userId vào đây
+            );
 
-        Intent intent = new Intent(this, ExchangeSuccessActivity.class);
-        intent.putExtra("PRODUCT_NAME", targetProductName);
-        intent.putExtra("YOUR_PRODUCT", name);
-        intent.putExtra("ESTIMATED_PRICE", price);
-        intent.putExtra("DESCRIPTION", desc);
-        intent.putExtra("EXCHANGE_ID", exchange.getExchangeId());
-        startActivity(intent);
-        finish();
+            // 2. TẠO TIN NHẮN ĐẦU TIÊN
+            int sellerId = 1; // Người bán mặc định
+
+            String messageContent = "Xin chào! Tôi muốn trao đổi sản phẩm \"" +
+                    targetProductName + "\" với sản phẩm \"" +
+                    name + "\" của tôi. " +
+                    "Giá trị ước tính: " + price + "đ. " +
+                    "Mô tả: " + desc;
+
+            databaseHelper.createExchangeMessage(
+                    currentUserId,    // senderId (người mua)
+                    sellerId,         // receiverId (người bán)
+                    exchange.getExchangeId(),  // exchangeId
+                    messageContent     // nội dung tin nhắn
+            );
+
+            // 3. Cập nhật status
+            databaseHelper.updateExchangeStatus(exchange.getExchangeId(), "Đang chờ phản hồi");
+
+            Toast.makeText(this,
+                    "✅ Đã gửi đề nghị trao đổi!\n" +
+                            "Mã trao đổi: " + exchange.getExchangeId() + "\n" +
+                            "Bạn có thể theo dõi trong mục Đơn hàng của tôi.",
+                    Toast.LENGTH_LONG).show();
+
+            // 4. Chuyển sang màn hình thành công
+            Intent intent = new Intent(this, ExchangeSuccessActivity.class);
+            intent.putExtra("PRODUCT_NAME", targetProductName);
+            intent.putExtra("YOUR_PRODUCT", name);
+            intent.putExtra("ESTIMATED_PRICE", price);
+            intent.putExtra("DESCRIPTION", desc);
+            intent.putExtra("EXCHANGE_ID", exchange.getExchangeId());
+            intent.putExtra("EXCHANGE_STATUS", "Đang chờ phản hồi");
+            intent.putExtra("USER_ID", currentUserId);  // THÊM userId
+            startActivity(intent);
+            finish();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "❌ Lỗi gửi đề nghị: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 }

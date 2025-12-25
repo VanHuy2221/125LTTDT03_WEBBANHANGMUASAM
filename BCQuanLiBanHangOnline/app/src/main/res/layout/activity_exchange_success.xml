@@ -132,12 +132,14 @@
 
                 <TextView
                     android:id="@+id/tvProductName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="iPhone 14 Pro Max"
                     android:textSize="14sp"
                     android:textColor="#111827"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="end"/>
             </LinearLayout>
 
             <!-- Your Product -->
@@ -157,12 +159,14 @@
 
                 <TextView
                     android:id="@+id/tvYourProduct"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="MacBook Pro M2"
                     android:textSize="14sp"
                     android:textColor="#111827"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="end"/>
             </LinearLayout>
 
             <!-- Estimated Value -->
@@ -182,12 +186,14 @@
 
                 <TextView
                     android:id="@+id/tvEstimatedValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="25.000.000đ"
                     android:textSize="14sp"
                     android:textColor="#111827"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="end"/>
             </LinearLayout>
 
             <!-- Exchange ID -->
@@ -207,12 +213,14 @@
 
                 <TextView
                     android:id="@+id/tvExchangeId"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="EX123456"
                     android:textSize="14sp"
                     android:textColor="#1976D2"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="end"/>
             </LinearLayout>
 
             <!-- Status -->
@@ -232,12 +240,14 @@
 
                 <TextView
                     android:id="@+id/tvStatus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Đang chờ phản hồi"
                     android:textSize="14sp"
                     android:textColor="#F59E0B"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="end"/>
             </LinearLayout>
 
             <!-- Date -->
@@ -256,11 +266,13 @@
 
                 <TextView
                     android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="15/03/2024"
                     android:textSize="14sp"
-                    android:textColor="#111827"/>
+                    android:textColor="#111827"
+                    android:gravity="end"/>
             </LinearLayout>
 
         </LinearLayout>

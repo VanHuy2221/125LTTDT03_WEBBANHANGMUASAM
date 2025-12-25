@@ -21,6 +21,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private String currentProductDescription;
     private int currentProductImage;
 
+    private int userId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                 R.drawable.iphone_14_pro_max
         );
 
+        userId = intent.getIntExtra("USER_ID", -1);
+
         productName.setText(currentProductName);
         productPrice.setText(formatPrice(currentProductPrice));
         productDescription.setText(currentProductDescription);
@@ -85,6 +89,12 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
+        if(userId == -1){
+            Toast.makeText(this, "Vui lòng đăng nhập để thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Thêm vào DB: db.addToCart(userId, currentProductName, currentProductPrice,...)
         Toast.makeText(
                 this,
                 "Đã thêm " + currentProductName + " vào giỏ hàng",
@@ -99,7 +109,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         configIntent.putExtra("PRODUCT_PRICE", currentProductPrice);
         configIntent.putExtra("PRODUCT_DESCRIPTION", currentProductDescription);
         configIntent.putExtra("PRODUCT_IMAGE", currentProductImage);
-
+        configIntent.putExtra("USER_ID", userId);
         startActivity(configIntent);
     }
 }

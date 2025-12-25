@@ -20,4 +20,16 @@ public class Message {
         this.image = image;
         this.sentAt = sentAt;
     }
+
+    public int getMessageId() { return messageId; }
+    public int getSenderId() { return senderId; }
+    public int getReceiverId() { return receiverId; }
+    public Integer getExchangeId() { return exchangeId; }
+    public String getContent() { return content; }
+    public String getImage() { return image; }
+    public String getSentAt() { return sentAt; }
+
+    // Có thể thêm setter nếu cần
+    public void setContent(String content) { this.content = content; }
+    public void setSentAt(String sentAt) { this.sentAt = sentAt; }
 }

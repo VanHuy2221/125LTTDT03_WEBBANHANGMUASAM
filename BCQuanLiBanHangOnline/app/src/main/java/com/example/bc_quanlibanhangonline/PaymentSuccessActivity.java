@@ -14,12 +14,15 @@ public class PaymentSuccessActivity extends AppCompatActivity {
 
     private TextView tvOrderNumber, tvOrderDate, tvOrderTotal, tvPaymentMethod, tvOrderStatus;
     private Button btnGoHome, btnViewOrder;
+    private int userId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_success);
 
+        Intent intent = getIntent();
+        userId = intent.getIntExtra("USER_ID", -1);
         initializeViews();
         setupEventListeners();
         displayOrderDetails();
@@ -99,6 +102,7 @@ public class PaymentSuccessActivity extends AppCompatActivity {
         intent.putExtra("ORDER_TOTAL", tvOrderTotal.getText().toString());
         intent.putExtra("PAYMENT_METHOD", tvPaymentMethod.getText().toString());
         intent.putExtra("ORDER_STATUS", tvOrderStatus.getText().toString());
+        intent.putExtra("USER_ID", userId);
 
         // Clear back stack và start activity mới
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

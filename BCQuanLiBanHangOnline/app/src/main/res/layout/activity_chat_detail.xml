@@ -23,71 +23,41 @@
             android:src="@drawable/ic_back"
             app:tint="#000000"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Nguyễn Hà"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:gravity="center"
-            android:layout_marginStart="16dp"/>
-
-    </LinearLayout>
-
-    <!-- Tin nhắn từ Nguyễn Hà -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:layout_marginTop="16dp">
-
-        <TextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:text="NH"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:background="#2196F3"
-            android:layout_marginEnd="12dp"/>
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
 
             <TextView
+                android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nguyễn Hà"
-                android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"/>
 
             <TextView
+                android:id="@+id/tvUserStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chào shop, mình muốn hội về sản phẩm này."
-                android:textSize="16sp"
-                android:textColor="#000000"
-                android:background="#F0F0F0"
-                android:padding="12dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="60dp"/>
-
+                android:text="Đang online"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp"/>
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Khoảng trống để đẩy input xuống dưới -->
-    <View
+    <!-- THAY ĐỔI: Sử dụng RecyclerView thay cho ScrollView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:padding="8dp"/>
 
     <!-- Input tin nhắn - Luôn ở dưới cùng -->
     <LinearLayout
@@ -99,6 +69,7 @@
         android:gravity="center_vertical">
 
         <EditText
+            android:id="@+id/edtMessage"
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_weight="1"
@@ -110,6 +81,7 @@
             android:maxLines="1"/>
 
         <Button
+            android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:text="Gửi"

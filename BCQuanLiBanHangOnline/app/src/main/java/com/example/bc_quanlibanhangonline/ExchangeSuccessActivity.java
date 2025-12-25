@@ -11,8 +11,12 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.ExchangeRequest;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ExchangeSuccessActivity extends AppCompatActivity {
@@ -22,10 +26,16 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
             tvExchangeId, tvStatus, tvDate, tvSuccessMessage;
     private Button btnGoHome, btnViewDetails;
 
+    private DatabaseHelper databaseHelper;
+    private String currentExchangeId; // THÊM: Lưu exchangeId
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange_success);
+
+        // Khởi tạo DatabaseHelper
+        databaseHelper = new DatabaseHelper(this);
 
         // Nhận dữ liệu từ ExchangeActivity
         Intent intent = getIntent();
@@ -34,6 +44,9 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
         String estimatedPrice = intent.getStringExtra("ESTIMATED_PRICE");
         String description = intent.getStringExtra("DESCRIPTION");
         String exchangeId = intent.getStringExtra("EXCHANGE_ID");
+        int userId = intent.getIntExtra("USER_ID", -1); // THÊM: Lấy userId
+
+        currentExchangeId = exchangeId; // Lưu exchangeId
 
         // Ánh xạ view
         initViews();
@@ -44,7 +57,7 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
         // Thiết lập sự kiện
         setupEvents();
 
-        // Xử lý nút back (SỬA LẠI)
+        // Xử lý nút back
         setupBackPressedHandler();
     }
 
@@ -94,6 +107,7 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
             // Tạo mã đề nghị tự động nếu không có
             String autoExchangeId = "EX" + System.currentTimeMillis();
             tvExchangeId.setText(autoExchangeId);
+            currentExchangeId = autoExchangeId;
         }
 
         // Ngày hiện tại
@@ -107,6 +121,38 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
                     productName + ". Bạn có thể nhắn tin để thương lượng thêm.";
             tvSuccessMessage.setText(successMessage);
         }
+
+        // THÊM: Lấy thông tin ExchangeRequest từ database
+        if (exchangeId != null) {
+            ExchangeRequest exchange = databaseHelper.getExchangeRequestById(exchangeId);
+            if (exchange != null) {
+                // Cập nhật status từ database
+                tvStatus.setText(getStatusText(exchange.getStatus()));
+
+                // Lấy tin nhắn đầu tiên (nếu có)
+                List<com.example.bc_quanlibanhangonline.models.Message> messages =
+                        databaseHelper.getMessagesByExchangeId(exchangeId);
+
+                if (!messages.isEmpty()) {
+                    // Có thể hiển thị số tin nhắn
+                    tvSuccessMessage.setText("Đã có " + messages.size() + " tin nhắn trong hội thoại");
+                }
+            }
+        }
+    }
+
+    // THÊM phương thức mới để lấy status text
+    private String getStatusText(String status) {
+        if (status == null) return "Đang chờ phản hồi";
+
+        switch (status.toLowerCase()) {
+            case "pending": return "⏳ Đang chờ phản hồi";
+            case "negotiating": return "💬 Đang thương lượng";
+            case "accepted": return "✅ Đã chấp nhận";
+            case "rejected": return "❌ Đã từ chối";
+            case "completed": return "🎉 Hoàn thành";
+            default: return "Đang chờ phản hồi";
+        }
     }
 
     private void setupEvents() {
@@ -118,11 +164,11 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
             }
         });
 
-        // Nút tin nhắn - mở ChatListActivity
+        // Nút tin nhắn - mở ChatListActivity HOẶC ChatDetailActivity
         btnMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openChatListActivity();
+                openChatActivity();
             }
         });
 
@@ -143,6 +189,31 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
         });
     }
 
+    // SỬA: Thêm phương thức mở chat activity
+    private void openChatActivity() {
+        try {
+            if (currentExchangeId == null || currentExchangeId.isEmpty()) {
+                Toast.makeText(this, "Không tìm thấy mã trao đổi", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Mở ChatDetailActivity trực tiếp với exchangeId
+            Intent intent = new Intent(this, ChatDetailActivity.class);
+            intent.putExtra("EXCHANGE_ID", currentExchangeId);
+
+            // Giả sử user hiện tại là người mua (userId = 3), người bán là (userId = 1)
+            intent.putExtra("SENDER_ID", 3); // Người mua
+            intent.putExtra("RECEIVER_ID", 1); // Người bán
+            intent.putExtra("CHAT_TYPE", "exchange");
+
+            startActivity(intent);
+            Toast.makeText(this, "Mở chat trao đổi #" + currentExchangeId, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Không thể mở chat: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
     // SỬA LẠI: Thêm phương thức xử lý back pressed mới
     private void setupBackPressedHandler() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -154,29 +225,6 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
         });
     }
 
-    private void openChatListActivity() {
-        try {
-            Intent intent = new Intent(this, ChatListActivity.class);
-
-            // Truyền thông tin trao đổi để bắt đầu chat
-            String exchangeId = tvExchangeId.getText().toString();
-            String productName = tvProductName.getText().toString();
-            String yourProduct = tvYourProduct.getText().toString();
-
-            intent.putExtra("EXCHANGE_ID", exchangeId);
-            intent.putExtra("PRODUCT_NAME", productName);
-            intent.putExtra("YOUR_PRODUCT", yourProduct);
-            intent.putExtra("CHAT_TYPE", "exchange"); // Loại chat: trao đổi
-
-            startActivity(intent);
-
-            Toast.makeText(this, "Mở hội thoại trao đổi", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "Không thể mở tin nhắn", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-    }
-
     private void goToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -185,24 +233,16 @@ public class ExchangeSuccessActivity extends AppCompatActivity {
     }
 
     private void viewExchangeDetails() {
-        Toast.makeText(this,
-                "Đang theo dõi đề nghị trao đổi: " + tvExchangeId.getText(),
-                Toast.LENGTH_SHORT).show();
-
-        // TODO: Có thể mở màn hình chi tiết trao đổi
-        // Intent intent = new Intent(this, ExchangeDetailActivity.class);
-        // intent.putExtra("EXCHANGE_ID", tvExchangeId.getText().toString());
-        // startActivity(intent);
+        if (currentExchangeId != null) {
+            Intent intent = new Intent(this, ExchangeDetailForBuyerActivity.class);
+            intent.putExtra("EXCHANGE_ID", currentExchangeId);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Không tìm thấy chi tiết trao đổi", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String formatPrice(int price) {
         return String.format("%,dđ", price).replace(",", ".");
     }
-
-    // XÓA hoặc SỬA phương thức onBackPressed cũ
-    // @Override
-    // public void onBackPressed() {
-    //     // Khi nhấn nút back vật lý, quay về ExchangeActivity
-    //     super.onBackPressed();
-    // }
 }

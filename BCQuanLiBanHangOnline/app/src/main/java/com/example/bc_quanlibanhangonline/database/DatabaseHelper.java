@@ -1,23 +1,22 @@
 package com.example.bc_quanlibanhangonline.database;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.example.bc_quanlibanhangonline.R;
 import com.example.bc_quanlibanhangonline.models.Category;
 import com.example.bc_quanlibanhangonline.models.ExchangeRequest;
+import com.example.bc_quanlibanhangonline.models.Order;
 import com.example.bc_quanlibanhangonline.models.OrderDetail;
 import com.example.bc_quanlibanhangonline.models.Payment;
 import com.example.bc_quanlibanhangonline.models.Product;
-import com.example.bc_quanlibanhangonline.models.Order;
+import com.example.bc_quanlibanhangonline.models.Message;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 public class DatabaseHelper {
     private Context context;
@@ -26,6 +25,10 @@ public class DatabaseHelper {
     private static final List<OrderDetail> orderDetails = new ArrayList<>();
     private static final List<Payment> payments = new ArrayList<>();
     private static final List<ExchangeRequest> exchangeRequests = new ArrayList<>();
+
+    // THÊM: Danh sách tin nhắn
+    private static final List<Message> messages = new ArrayList<>();
+
     public DatabaseHelper(Context context) {
         this.context = context;
     }
@@ -313,10 +316,12 @@ public class DatabaseHelper {
         return orders;
     }
 
+    // SỬA: Thêm userId vào phương thức createExchange
     public ExchangeRequest createExchange(
             String productName,
             String exchangeItemName,
-            String message
+            String message,
+            int userId  // THÊM userId
     ) {
         String exchangeId = "EX" + System.currentTimeMillis();
 
@@ -325,11 +330,164 @@ public class DatabaseHelper {
                 productName,
                 exchangeItemName,
                 message,
-                "Đang chờ phản hồi"
+                "Đang chờ phản hồi",
+                userId  // THÊM userId
         );
 
         exchangeRequests.add(exchange);
         return exchange;
+    }
+
+    // GIỮ NGUYÊN: Phương thức cũ để không break code hiện có
+    public ExchangeRequest createExchange(
+            String productName,
+            String exchangeItemName,
+            String message
+    ) {
+        return createExchange(productName, exchangeItemName, message, -1); // -1 = unknown user
+    }
+
+    // ========== THÊM PHƯƠNG THỨC QUẢN LÝ TRAO ĐỔI ==========
+
+    // THÊM: Lấy ExchangeRequest theo ID
+    public ExchangeRequest getExchangeRequestById(String exchangeId) {
+        for (ExchangeRequest exchange : exchangeRequests) {
+            if (exchange.getExchangeId().equals(exchangeId)) {
+                return exchange;
+            }
+        }
+        return null;
+    }
+
+    // SỬA: Lấy ExchangeRequest theo userId (cập nhật để dùng userId mới)
+    public List<ExchangeRequest> getExchangeRequestsByUser(int userId) {
+        List<ExchangeRequest> result = new ArrayList<>();
+        for (ExchangeRequest exchange : exchangeRequests) {
+            // Kiểm tra nếu exchange có userId (có thể là -1 nếu từ phương thức cũ)
+            if (exchange.getUserId() == userId) {
+                result.add(exchange);
+            }
+        }
+        return result;
+    }
+
+    // THÊM: Cập nhật trạng thái ExchangeRequest
+    public boolean updateExchangeStatus(String exchangeId, String newStatus) {
+        for (int i = 0; i < exchangeRequests.size(); i++) {
+            ExchangeRequest exchange = exchangeRequests.get(i);
+            if (exchange.getExchangeId().equals(exchangeId)) {
+                // Tạo ExchangeRequest mới với status mới
+                ExchangeRequest updatedExchange = new ExchangeRequest(
+                        exchange.getExchangeId(),
+                        exchange.getProductName(),
+                        exchange.getExchangeItemName(),
+                        exchange.getMessage(),
+                        newStatus,
+                        exchange.getUserId()  // GIỮ NGUYÊN userId
+                );
+                exchangeRequests.set(i, updatedExchange);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // THÊM: Tạo tin nhắn cho trao đổi
+    public Message createExchangeMessage(
+            int senderId,
+            int receiverId,
+            String exchangeId,
+            String content
+    ) {
+        int messageId = messages.size() + 1;
+        String sentAt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                .format(new Date());
+
+        Integer exchangeIdInt = null;
+        try {
+            exchangeIdInt = Integer.parseInt(exchangeId.replace("EX", ""));
+        } catch (NumberFormatException e) {
+            // Nếu exchangeId không phải số, giữ null
+        }
+
+        Message message = new Message(
+                messageId, senderId, receiverId, exchangeIdInt, content, null, sentAt
+        );
+
+        messages.add(message);
+        return message;
+    }
+
+    // SỬA: Lấy tin nhắn theo exchangeId - DÙNG GETTER THAY VÌ REFLECTION
+    public List<Message> getMessagesByExchangeId(String exchangeId) {
+        List<Message> result = new ArrayList<>();
+
+        Integer exchangeIdInt = null;
+        try {
+            exchangeIdInt = Integer.parseInt(exchangeId.replace("EX", ""));
+        } catch (NumberFormatException e) {
+            // KHÔNG return, vì exchangeId có thể là null trong Message
+            exchangeIdInt = null;
+        }
+
+        for (Message message : messages) {
+            // DÙNG GETTER THAY VÌ REFLECTION
+            Integer msgExchangeId = message.getExchangeId();
+
+            if (exchangeIdInt == null && msgExchangeId == null) {
+                // Cả hai đều null -> khớp
+                result.add(message);
+            } else if (exchangeIdInt != null && exchangeIdInt.equals(msgExchangeId)) {
+                // Khớp giá trị Integer
+                result.add(message);
+            }
+            // Nếu exchangeIdInt = null nhưng msgExchangeId != null: không khớp
+            // Nếu exchangeIdInt != null nhưng msgExchangeId = null: không khớp
+        }
+
+        return result;
+    }
+
+    // THÊM: Phương thức đơn giản hơn không dùng Reflection
+    public List<Message> getMessagesByExchangeIdSimple(String exchangeId) {
+        List<Message> result = new ArrayList<>();
+
+        Integer exchangeIdInt = null;
+        try {
+            exchangeIdInt = Integer.parseInt(exchangeId.replace("EX", ""));
+        } catch (NumberFormatException e) {
+            return result;
+        }
+
+        for (Message message : messages) {
+            Integer msgExchangeId = message.getExchangeId();
+
+            if (msgExchangeId != null && msgExchangeId.equals(exchangeIdInt)) {
+                result.add(message);
+            }
+        }
+        return result;
+    }
+
+    // Lớp nội bộ để truy cập exchangeId của Message (KHÔNG CÒN DÙNG)
+    private class MessageAccessor {
+        private Message message;
+
+        public MessageAccessor(Message message) {
+            this.message = message;
+        }
+
+        public Integer getExchangeId() {
+            try {
+                // Vẫn phải dùng Reflection vì Message không có getter
+                Field field = Message.class.getDeclaredField("exchangeId");
+                field.setAccessible(true);
+                return (Integer) field.get(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
     public List<ExchangeRequest> getExchangeRequests() {
@@ -518,5 +676,31 @@ public class DatabaseHelper {
     // THÊM MỚI: Lấy danh sách Payments
     public List<Payment> getAllPayments() {
         return payments;
+    }
+
+    public Message createSystemMessage(String content, String exchangeId) {
+        int messageId = messages.size() + 1;
+        String sentAt = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                .format(new Date());
+
+        Integer exchangeIdInt = null;
+        try {
+            exchangeIdInt = Integer.parseInt(exchangeId.replace("EX", ""));
+        } catch (NumberFormatException e) {
+            // Nếu exchangeId không phải số, giữ null
+        }
+
+        Message message = new Message(
+                messageId,
+                0,  // senderId = 0 là hệ thống
+                0,  // receiverId = 0
+                exchangeIdInt,
+                content,
+                null,
+                sentAt
+        );
+
+        messages.add(message);
+        return message;
     }
 }
