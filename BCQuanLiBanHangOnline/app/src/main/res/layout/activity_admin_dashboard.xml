@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,6 +19,7 @@
 
             <!-- ================= HEADER ================= -->
             <LinearLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -26,6 +28,7 @@
                 android:gravity="center_vertical">
 
                 <ImageView
+                    android:id="@+id/imgAdminAvatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_administrator"
@@ -40,6 +43,7 @@
                     android:layout_marginStart="12dp">
 
                     <TextView
+                        android:id="@+id/tvAdminTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Admin Dashboard"
@@ -48,6 +52,7 @@
                         android:textColor="#FFFFFF" />
 
                     <TextView
+                        android:id="@+id/tvAdminSubtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Quản trị hệ thống bán hàng"
@@ -57,6 +62,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/btnLogout"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:src="@drawable/ic_logout"
@@ -66,6 +72,7 @@
 
             <!-- ================= STATS ================= -->
             <LinearLayout
+                android:id="@+id/statsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -82,6 +89,7 @@
 
                     <!-- USERS -->
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardUsers"
                         android:layout_width="0dp"
                         android:layout_height="110dp"
                         android:layout_weight="1"
@@ -96,17 +104,19 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvUserCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1.2K"
+                                android:text="0"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="#1E88E5" />
 
                             <TextView
+                                android:id="@+id/tvUserLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Users"
+                                android:text="Người dùng"
                                 android:textSize="13sp"
                                 android:textColor="#757575" />
                         </LinearLayout>
@@ -114,6 +124,7 @@
 
                     <!-- ORDERS -->
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardOrders"
                         android:layout_width="0dp"
                         android:layout_height="110dp"
                         android:layout_weight="1"
@@ -128,17 +139,19 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvOrderCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="45"
+                                android:text="0"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="#43A047" />
 
                             <TextView
+                                android:id="@+id/tvOrderLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Orders"
+                                android:text="Đơn hàng"
                                 android:textSize="13sp"
                                 android:textColor="#757575" />
                         </LinearLayout>
@@ -153,6 +166,7 @@
 
                     <!-- REVENUE -->
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardRevenue"
                         android:layout_width="0dp"
                         android:layout_height="110dp"
                         android:layout_weight="1"
@@ -167,17 +181,19 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvRevenue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="5.2M"
+                                android:text="0"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="#E53935" />
 
                             <TextView
+                                android:id="@+id/tvRevenueLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Revenue"
+                                android:text="Doanh thu"
                                 android:textSize="13sp"
                                 android:textColor="#757575" />
                         </LinearLayout>
@@ -185,6 +201,7 @@
 
                     <!-- PENDING -->
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardPending"
                         android:layout_width="0dp"
                         android:layout_height="110dp"
                         android:layout_weight="1"
@@ -199,17 +216,19 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvPendingCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12"
+                                android:text="0"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="#FB8C00" />
 
                             <TextView
+                                android:id="@+id/tvPendingLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Pending"
+                                android:text="Đang chờ"
                                 android:textSize="13sp"
                                 android:textColor="#757575" />
                         </LinearLayout>
@@ -219,6 +238,7 @@
 
             <!-- ================= MENU ================= -->
             <LinearLayout
+                android:id="@+id/menuContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -229,6 +249,7 @@
 
                 <!-- DASHBOARD -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardDashboard"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dp"
@@ -243,12 +264,14 @@
                         android:padding="14dp">
 
                         <ImageView
+                            android:id="@+id/iconDashboard"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_dashboard"
                             app:tint="#1E88E5" />
 
                         <TextView
+                            android:id="@+id/textDashboard"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Dashboard"
@@ -260,6 +283,7 @@
 
                 <!-- QUẢN LÝ NGƯỜI DÙNG -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardUserManagement"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dp"
@@ -274,12 +298,14 @@
                         android:padding="14dp">
 
                         <ImageView
+                            android:id="@+id/iconUsers"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_person_2"
                             app:tint="#43A047" />
 
                         <TextView
+                            android:id="@+id/textUserManagement"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Quản lý người dùng"
@@ -291,6 +317,7 @@
 
                 <!-- QUẢN LÝ ĐƠN HÀNG -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardOrderManagement"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dp"
@@ -305,12 +332,14 @@
                         android:padding="14dp">
 
                         <ImageView
+                            android:id="@+id/iconOrders"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_order"
                             app:tint="#FB8C00" />
 
                         <TextView
+                            android:id="@+id/textOrderManagement"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Danh sách đơn hàng"
@@ -322,6 +351,7 @@
 
                 <!-- QUẢN LÝ DANH MỤC -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardCategoryManagement"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dp"
@@ -336,12 +366,14 @@
                         android:padding="14dp">
 
                         <ImageView
+                            android:id="@+id/iconCategories"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_category"
                             app:tint="#6A1B9A" />
 
                         <TextView
+                            android:id="@+id/textCategoryManagement"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Quản lý danh mục"
@@ -353,6 +385,7 @@
 
                 <!-- QUẢN LÝ SẢN PHẨM -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardProductManagement"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dp"
@@ -367,12 +400,14 @@
                         android:padding="14dp">
 
                         <ImageView
+                            android:id="@+id/iconProducts"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_product"
                             app:tint="#D32F2F" />
 
                         <TextView
+                            android:id="@+id/textProductManagement"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Quản lý sản phẩm"
@@ -384,6 +419,7 @@
 
                 <!-- BÁO CÁO -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardReports"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="10dp"
@@ -398,12 +434,14 @@
                         android:padding="14dp">
 
                         <ImageView
+                            android:id="@+id/iconReports"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_report"
                             app:tint="#0288D1" />
 
                         <TextView
+                            android:id="@+id/textReports"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Báo cáo"

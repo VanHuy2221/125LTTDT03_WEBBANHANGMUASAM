@@ -2,56 +2,64 @@ package com.example.bc_quanlibanhangonline;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.bc_quanlibanhangonline.database.UserDatabase;
+import com.example.bc_quanlibanhangonline.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SellerProfileActivity extends AppCompatActivity {
 
-    LinearLayout menuContainer;
+    private LinearLayout menuContainer;
     private BottomNavigationView bottomNav;
+    private UserDatabase userDatabase;
 
-    // Khai báo các view cho 4 ô chức năng
     private CardView cardProductList, cardPendingOrders, cardRevenueStats, cardStore;
     private TextView txtProductCount, txtPendingOrderCount, txtRevenue;
-    private TextView txtUserName, txtFollowerCount, txtFollowingCount;
+    private TextView txtUserName, txtUserType, txtShopInfo;
+
+    private int userId = -1;
+    private String userRole = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile_seller);
+
+        userDatabase = new UserDatabase(this);
+
+        // Lấy userId và role từ Intent
+        Intent intent = getIntent();
+        if (intent != null) {
+            userId = intent.getIntExtra("USER_ID", -1);
+            userRole = intent.getStringExtra("USER_ROLE");
+            if (userRole == null) userRole = "";
+        }
 
         bottomNav = findViewById(R.id.bottom_nav);
         menuContainer = findViewById(R.id.menuContainer);
 
-        // Ánh xạ các view cho 4 ô chức năng
         initFeatureViews();
-
-        // Ánh xạ các view cho header
         initHeaderViews();
-
-        // Thiết lập sự kiện click cho 4 ô chức năng
         setupFeatureClicks();
-
-        // Thiết lập bottom navigation
         setupBottomNavigation();
 
-        // Đặt item "Account" là selected (vì đang ở ProfileActivity)
         bottomNav.setSelectedItemId(R.id.nav_account);
 
+        // Edge-to-edge padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
@@ -59,11 +67,7 @@ public class SellerProfileActivity extends AppCompatActivity {
         });
 
         addMenuItems();
-
-        // Tải dữ liệu cho các ô chức năng
         loadFeatureData();
-
-        // Tải thông tin người dùng
         loadUserData();
     }
 
@@ -80,38 +84,33 @@ public class SellerProfileActivity extends AppCompatActivity {
 
     private void initHeaderViews() {
         txtUserName = findViewById(R.id.txtUserName);
-        // Nếu có TextView cho follower/following
-        // txtFollowerCount = findViewById(R.id.txtFollowerCount);
-        // txtFollowingCount = findViewById(R.id.txtFollowingCount);
+        txtUserType = findViewById(R.id.txtUserType);
+        txtShopInfo = findViewById(R.id.txtShopInfo);
     }
 
     private void setupFeatureClicks() {
-        // 1. Danh sách sản phẩm
         cardProductList.setOnClickListener(v -> {
-            Intent intent = new Intent(SellerProfileActivity.this, OrderManagementActivity.class);
+            Intent intent = new Intent(this, OrderManagementActivity.class);
             startActivity(intent);
         });
 
-        // 2. Đơn hàng chờ
         cardPendingOrders.setOnClickListener(v -> {
-            Intent intent = new Intent(SellerProfileActivity.this, OrderManagementActivity.class);
+            Intent intent = new Intent(this, OrderManagementActivity.class);
             intent.putExtra("tab", "pending");
             startActivity(intent);
         });
 
-        // 3. Doanh thu & Thống kê
         cardRevenueStats.setOnClickListener(v -> {
-            Intent intent = new Intent(SellerProfileActivity.this, OrderManagementActivity.class);
+            Intent intent = new Intent(this, OrderManagementActivity.class);
             startActivity(intent);
         });
 
-        // 4. Gian hàng
         cardStore.setOnClickListener(v -> {
-            Intent intent = new Intent(SellerProfileActivity.this, OrderManagementActivity.class);
+            Intent intent = new Intent(this, OrderManagementActivity.class);
             startActivity(intent);
         });
 
-        // Thêm hiệu ứng click
+        // Hiệu ứng click
         setClickEffect(cardProductList);
         setClickEffect(cardPendingOrders);
         setClickEffect(cardRevenueStats);
@@ -139,123 +138,113 @@ public class SellerProfileActivity extends AppCompatActivity {
     }
 
     private void loadFeatureData() {
-        // TODO: Thay thế bằng API call thực tế
-        // Giả lập dữ liệu cho seller
-
-        // Giả lập dữ liệu từ API
+        // TODO: Load từ database thực tế
         int productCount = 42;
         int pendingOrderCount = 8;
-        double revenue = 87500000; // 87.5 triệu
+        double revenue = 87500000;
 
-        // Cập nhật UI
         txtProductCount.setText(productCount + " sản phẩm");
         txtPendingOrderCount.setText(pendingOrderCount + " đơn chờ");
         txtRevenue.setText(formatCurrency(revenue));
-
-        // Nếu có API, gọi ở đây:
-        // loadDataFromAPI();
     }
 
     private void loadUserData() {
-        // TODO: Thay thế bằng API call thực tế
-        // Giả lập dữ liệu người dùng
+        if (userId == -1) {
+            txtUserName.setText("Đang tải...");
+            return;
+        }
 
-        String userName = "Shop XYZ";
-        int followerCount = 1250;
-        int followingCount = 45;
+        try {
+            User user = userDatabase.getUserById(userId);
+            if (user != null) {
+                txtUserName.setText(user.getFullName() != null ? user.getFullName() : user.getEmail());
+                String role = user.getRole() != null ? user.getRole() : "seller";
 
-        // Cập nhật UI
-        txtUserName.setText(userName);
+                // Hiển thị role
+                txtUserType.setVisibility(View.VISIBLE);
+                switch (role.toLowerCase()) {
+                    case "admin":
+                        txtUserType.setText("Quản trị viên");
+                        txtUserType.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                        break;
+                    case "seller":
+                        txtUserType.setText("Người bán");
+                        txtUserType.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+                        break;
+                    default:
+                        txtUserType.setText("Khách hàng");
+                        txtUserType.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                        break;
+                }
 
-        // Nếu có TextView cho follower/following
-        // txtFollowerCount.setText(followerCount + " Người theo dõi");
-        // txtFollowingCount.setText(followingCount + " Đang theo dõi");
+                String shopInfo = user.getAddress() != null ? "Địa chỉ: " + user.getAddress() : "Chào mừng đến với gian hàng của bạn!";
+                txtShopInfo.setText(shopInfo);
+
+            } else {
+                txtUserName.setText("Người dùng không tồn tại");
+                txtUserType.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            txtUserName.setText("Lỗi tải dữ liệu");
+            txtUserType.setVisibility(View.GONE);
+        }
     }
 
     private String formatCurrency(double amount) {
-        if (amount >= 1000000000) {
-            return String.format("%.1f tỷ", amount / 1000000000);
-        } else if (amount >= 1000000) {
-            return String.format("%.0f triệu", amount / 1000000);
-        } else if (amount >= 1000) {
-            return String.format("%.0fK", amount / 1000);
-        }
+        if (amount >= 1000000000) return String.format("%.1f tỷ", amount / 1000000000);
+        else if (amount >= 1000000) return String.format("%.0f triệu", amount / 1000000);
+        else if (amount >= 1000) return String.format("%.0fK", amount / 1000);
         return String.format("%.0f", amount);
     }
 
     private void addMenuItems() {
-        // Các menu dành cho seller
-        addItem("Khuyến mãi & Voucher", R.drawable.ic_sale, v -> {
-
-        });
-
-        addItem("Tin nhắn", R.drawable.ic_message, v -> {
-            Intent intent = new Intent(SellerProfileActivity.this, ChatListActivity.class);
-            startActivity(intent);
-        });
-
-        addItem("Đánh giá & Phản hồi", R.drawable.ic_positive_review, v -> {
-
-        });
-
-        addItem("Hỗ trợ & Liên hệ", R.drawable.ic_support, v -> {
-
-        });
-
-        addItem("Cài đặt tài khoản", R.drawable.ic_settings, v -> {
-
-        });
-
-        addItem("Đăng xuất", R.drawable.ic_logout, v -> {
-            // Xử lý đăng xuất
-            performLogout();
-        });
+        addItem("Khuyến mãi & Voucher", R.drawable.ic_sale, v -> Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show());
+        addItem("Tin nhắn", R.drawable.ic_message, v -> startActivity(new Intent(this, ChatListActivity.class)));
+        addItem("Đánh giá & Phản hồi", R.drawable.ic_positive_review, v -> Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show());
+        addItem("Hỗ trợ & Liên hệ", R.drawable.ic_support, v -> Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show());
+        addItem("Cài đặt tài khoản", R.drawable.ic_settings, v -> Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show());
+        addItem("Đăng xuất", R.drawable.ic_logout, v -> performLogout());
     }
 
     private void addItem(String title, int iconRes, View.OnClickListener clickListener) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_menu, menuContainer, false);
-
         ImageView imgIcon = view.findViewById(R.id.imgIcon);
         TextView txtTitle = view.findViewById(R.id.txtTitle);
-
         imgIcon.setImageResource(iconRes);
         txtTitle.setText(title);
-
-        // Click handler - sử dụng listener được truyền vào
         view.setOnClickListener(clickListener);
-
         menuContainer.addView(view);
-
-        // Add divider
         View divider = getLayoutInflater().inflate(R.layout.divider_item, menuContainer, false);
         menuContainer.addView(divider);
     }
 
     private void setupBottomNavigation() {
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-
             if (itemId == R.id.nav_home) {
-                // Chuyển về Home và kết thúc Activity hiện tại
-                Intent intent = new Intent(SellerProfileActivity.this, HomeActivity.class);
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("USER_ROLE", userRole);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_order) {
-                // Chuyển đến OrderTrackingActivity
-                Intent intent = new Intent(SellerProfileActivity.this, OrderTrackingActivity.class);
+                Intent intent = new Intent(this, OrderTrackingActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("USER_ROLE", userRole);
                 startActivity(intent);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_cart) {
-                // Chuyển đến CartActivity
-                Intent intent = new Intent(SellerProfileActivity.this, CartActivity.class);
+                Intent intent = new Intent(this, CartActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("USER_ROLE", userRole);
                 startActivity(intent);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_account) {
-                // Đã ở Profile rồi, không làm gì cả
                 return true;
             }
             return false;
@@ -263,46 +252,36 @@ public class SellerProfileActivity extends AppCompatActivity {
     }
 
     private void performLogout() {
-        // TODO: Xử lý logic đăng xuất
-        // Ví dụ: xóa token, clear shared preferences, v.v.
-
-        // Hiển thị dialog xác nhận
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Đăng xuất")
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Đăng xuất")
                 .setMessage("Bạn có chắc chắn muốn đăng xuất?")
                 .setPositiveButton("Đăng xuất", (dialog, which) -> {
-                    // Xử lý đăng xuất
-                    // SharedPreferences preferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
-                    // preferences.edit().clear().apply();
-
-                    // Chuyển về màn hình đăng nhập
-                    Intent intent = new Intent(SellerProfileActivity.this, LoginActivity.class);
+                    SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                    prefs.edit().clear().apply();
+                    Intent intent = new Intent(this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
+                    finishAffinity();
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (userDatabase != null) userDatabase.close();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        // Cập nhật dữ liệu mỗi khi quay lại màn hình
         loadFeatureData();
         loadUserData();
     }
 
-    // Phương thức để cập nhật số liệu từ bên ngoài
-    public void updateProductCount(int count) {
-        txtProductCount.setText(count + " sản phẩm");
-    }
-
-    public void updatePendingOrderCount(int count) {
-        txtPendingOrderCount.setText(count + " đơn chờ");
-    }
-
-    public void updateRevenue(double amount) {
-        txtRevenue.setText(formatCurrency(amount));
-    }
+    // Các phương thức cập nhật số liệu từ bên ngoài
+    public void updateProductCount(int count) { txtProductCount.setText(count + " sản phẩm"); }
+    public void updatePendingOrderCount(int count) { txtPendingOrderCount.setText(count + " đơn chờ"); }
+    public void updateRevenue(double amount) { txtRevenue.setText(formatCurrency(amount)); }
 }

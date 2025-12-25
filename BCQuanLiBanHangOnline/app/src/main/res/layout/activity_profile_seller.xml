@@ -8,7 +8,6 @@
     android:background="#F5F5F5"
     android:fitsSystemWindows="false">
 
-    <!-- SCROLL CONTENT - BAO GỒM CẢ HEADER VÀ 4 Ô CHỨC NĂNG -->
     <ScrollView
         android:id="@+id/scrollContent"
         android:layout_width="0dp"
@@ -23,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Header - SÁT HOÀN TOÀN VIỀN TRÊN -->
+            <!-- HEADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,6 +46,7 @@
                     android:layout_marginStart="16dp"
                     android:gravity="center_vertical">
 
+                    <!-- Tên + Loại tài khoản -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -58,22 +58,35 @@
                             android:id="@+id/txtUserName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Shop XYZ"
+                            android:text="Đang tải..."
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/txtUserType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Thành viên"
-                            android:textColor="#666666"
+                            android:text="Người bán"
+                            android:textColor="#FF9800"
                             android:textSize="12sp"
                             android:background="@drawable/member_badge"
                             android:paddingHorizontal="8dp"
                             android:paddingVertical="2dp"
-                            android:layout_marginStart="8dp" />
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
+                    <!-- Thông tin shop -->
+                    <TextView
+                        android:id="@+id/txtShopInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chào mừng đến với gian hàng của bạn!"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Follower / Following -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -81,6 +94,7 @@
                         android:gravity="center_vertical">
 
                         <TextView
+                            android:id="@+id/txtFollowerCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 Người theo dõi"
@@ -94,16 +108,17 @@
                             android:layout_marginHorizontal="8dp" />
 
                         <TextView
+                            android:id="@+id/txtFollowingCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3 Đang theo dõi"
+                            android:text="0 Đang theo dõi"
                             android:textColor="#666666"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- KHUNG CHỨA 4 Ô CHỨC NĂNG - CÓ BO GÓC TRÒN -->
+            <!-- KHUNG 4 Ô CHỨC NĂNG -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,14 +135,13 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Hàng 1: Danh sách sản phẩm & Đơn hàng chờ -->
+                    <!-- Hàng 1 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginBottom="12dp">
 
-                        <!-- Ô Danh sách sản phẩm -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardProductList"
                             android:layout_width="0dp"
@@ -137,21 +151,18 @@
                             app:cardCornerRadius="12dp"
                             app:cardElevation="3dp"
                             app:cardBackgroundColor="#E8F5E9">
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="12dp">
-
                                 <ImageView
                                     android:layout_width="48dp"
                                     android:layout_height="48dp"
                                     android:src="@drawable/ic_cubes"
                                     app:tint="#2E7D32"
                                     android:layout_marginBottom="8dp"/>
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -161,7 +172,6 @@
                                     android:textStyle="bold"
                                     android:gravity="center"
                                     android:textAlignment="center"/>
-
                                 <TextView
                                     android:id="@+id/txtProductCount"
                                     android:layout_width="wrap_content"
@@ -173,7 +183,6 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Ô Đơn hàng chờ -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardPendingOrders"
                             android:layout_width="0dp"
@@ -183,21 +192,18 @@
                             app:cardCornerRadius="12dp"
                             app:cardElevation="3dp"
                             app:cardBackgroundColor="#FFF3E0">
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="12dp">
-
                                 <ImageView
                                     android:layout_width="48dp"
                                     android:layout_height="48dp"
                                     android:src="@drawable/ic_checkout"
                                     app:tint="#EF6C00"
                                     android:layout_marginBottom="8dp"/>
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -207,7 +213,6 @@
                                     android:textStyle="bold"
                                     android:gravity="center"
                                     android:textAlignment="center"/>
-
                                 <TextView
                                     android:id="@+id/txtPendingOrderCount"
                                     android:layout_width="wrap_content"
@@ -220,13 +225,12 @@
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
 
-                    <!-- Hàng 2: Doanh thu & Thống kê và Gian hàng -->
+                    <!-- Hàng 2 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <!-- Ô Doanh thu & Thống kê -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardRevenueStats"
                             android:layout_width="0dp"
@@ -236,31 +240,27 @@
                             app:cardCornerRadius="12dp"
                             app:cardElevation="3dp"
                             app:cardBackgroundColor="#E3F2FD">
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="12dp">
-
                                 <ImageView
                                     android:layout_width="48dp"
                                     android:layout_height="48dp"
                                     android:src="@drawable/ic_revenue_graph"
                                     app:tint="#1565C0"
                                     android:layout_marginBottom="8dp"/>
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Doanh thu &amp;\nThống kê"
+                                    android:text="Doanh thu &amp; Thống kê"
                                     android:textColor="#1565C0"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:gravity="center"
                                     android:textAlignment="center"/>
-
                                 <TextView
                                     android:id="@+id/txtRevenue"
                                     android:layout_width="wrap_content"
@@ -272,7 +272,6 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Ô Gian hàng -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardStore"
                             android:layout_width="0dp"
@@ -282,21 +281,18 @@
                             app:cardCornerRadius="12dp"
                             app:cardElevation="3dp"
                             app:cardBackgroundColor="#F3E5F5">
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="12dp">
-
                                 <ImageView
                                     android:layout_width="48dp"
                                     android:layout_height="48dp"
                                     android:src="@drawable/ic_store"
                                     app:tint="#7B1FA2"
                                     android:layout_marginBottom="8dp"/>
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -306,7 +302,6 @@
                                     android:textStyle="bold"
                                     android:gravity="center"
                                     android:textAlignment="center"/>
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -330,11 +325,10 @@
                 android:elevation="3dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"/>
-
         </LinearLayout>
     </ScrollView>
 
-    <!-- ✅ BOTTOM NAV -->
+    <!-- BOTTOM NAVIGATION -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"
@@ -344,6 +338,5 @@
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

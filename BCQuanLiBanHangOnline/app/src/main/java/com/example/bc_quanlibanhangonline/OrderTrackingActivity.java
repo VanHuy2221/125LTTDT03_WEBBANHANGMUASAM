@@ -71,7 +71,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
                 return true;
 
             } else if (itemId == R.id.nav_account) {
-                startActivity(new Intent(this, SellerProfileActivity.class));
+                startActivity(new Intent(this, ProfileActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
                 return true;

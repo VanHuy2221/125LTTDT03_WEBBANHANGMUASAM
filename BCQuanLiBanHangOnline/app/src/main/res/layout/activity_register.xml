@@ -13,7 +13,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="32dp">
 
-        <!-- Nút quay lại - SỬA LẠI -->
+        <!-- Nút quay lại -->
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="48dp"
@@ -23,7 +23,8 @@
             android:layout_marginStart="0dp"
             android:src="@drawable/ic_arrow_back"
             app:tint="@color/text_primary"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:contentDescription="Quay lại" />
 
         <!-- Logo và tiêu đề -->
         <LinearLayout
@@ -143,6 +144,63 @@
                 android:padding="16dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Địa chỉ -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutAddress"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxStrokeColor="@color/colorPrimary"
+            app:hintTextColor="@color/text_hint"
+            app:boxBackgroundColor="@color/input_background"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Địa chỉ"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Loại tài khoản (Spinner) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutAccountType"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxStrokeColor="@color/colorPrimary"
+            app:hintTextColor="@color/text_hint"
+            app:boxBackgroundColor="@color/input_background"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="@color/colorPrimary">
+
+            <AutoCompleteTextView
+                android:id="@+id/spinnerAccountType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Loại tài khoản"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary"
+                android:padding="16dp"
+                android:inputType="none"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Mật khẩu -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutPassword"
@@ -158,10 +216,7 @@
             app:hintTextColor="@color/text_hint"
             app:boxBackgroundColor="@color/input_background"
             app:endIconMode="password_toggle"
-            app:endIconTint="@color/colorPrimary"
-            app:helperText="Mật khẩu ít nhất 6 ký tự"
-            app:helperTextEnabled="true"
-            app:helperTextTextColor="@color/text_hint">
+            app:endIconTint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
@@ -202,7 +257,7 @@
                 android:padding="16dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Điều khoản và chính sách với Checkbox -->
+        <!-- Điều khoản và chính sách -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -210,13 +265,12 @@
             android:layout_marginBottom="24dp"
             android:padding="4dp">
 
-            <!-- CheckBox đơn giản - chỉ cần màu đỏ khi checked -->
             <CheckBox
                 android:id="@+id/cbAgreeTerms"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:buttonTint="#e53935" /> <!-- Chỉ cần dòng này -->
+                android:buttonTint="#e53935" />
 
             <TextView
                 android:layout_width="0dp"
@@ -241,79 +295,6 @@
             app:cornerRadius="28dp"
             android:elevation="2dp"
             android:layout_marginBottom="32dp" />
-
-        <!-- Divider với Text ở giữa -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:layout_centerVertical="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hoặc đăng ký với"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@color/background"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
-        <!-- Social Register Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="32dp">
-
-            <!-- Google Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGoogle"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="GOOGLE"
-                android:textAllCaps="true"
-                android:textColor="@color/google_text"
-                android:textSize="15sp"
-                app:cornerRadius="28dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp"
-                app:icon="@drawable/ic_google_colored"
-                app:iconTint="@null"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp" />
-
-            <!-- Facebook Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFacebook"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="FACEBOOK"
-                android:textAllCaps="true"
-                android:textColor="@color/facebook_text"
-                android:textSize="15sp"
-                app:cornerRadius="28dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp"
-                app:icon="@drawable/ic_facebook_colored"
-                app:iconTint="@null"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp" />
-        </LinearLayout>
 
         <!-- Đã có tài khoản -->
         <LinearLayout
