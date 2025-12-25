@@ -11,7 +11,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.Order;
+import com.example.bc_quanlibanhangonline.models.Product;
+
 public class PaymentActivity extends AppCompatActivity {
+    private DatabaseHelper databaseHelper;
+    private String productName;
+    private int productId; // THÊM: Lưu productId
 
     private TextView tvFinalTotal;
     private Button btnProcessPayment;
@@ -26,7 +33,8 @@ public class PaymentActivity extends AppCompatActivity {
     private RadioButton radioQR, radioCreditCard, radioCOD;
 
     private int quantity;
-    private int totalPrice;
+    private int productTotal;
+    private int finalTotal;
     private final int shippingFee = 30000;
     private final int discount = 500000;
 
@@ -37,7 +45,11 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         quantity = intent.getIntExtra("QUANTITY", 1);
-        totalPrice = intent.getIntExtra("TOTAL_PRICE", 25990000);
+        productTotal = intent.getIntExtra("TOTAL_PRICE", 0);
+        productName = intent.getStringExtra("PRODUCT_NAME");
+        productId = intent.getIntExtra("PRODUCT_ID", -1); // THÊM: Nhận productId
+
+        databaseHelper = new DatabaseHelper(this);
 
         initViews();
         setupEvents();
@@ -58,22 +70,26 @@ public class PaymentActivity extends AppCompatActivity {
         radioCreditCard = findViewById(R.id.radioCreditCard);
         radioCOD = findViewById(R.id.radioCOD);
 
-        // mặc định
+        // Mặc định
         radioBuyMoney.setChecked(true);
         radioQR.setChecked(true);
         paymentMethodGroup.setVisibility(RadioGroup.VISIBLE);
+
+        // SỬA: Đổi text button cho phù hợp
+        btnProcessPayment.setText("XÁC NHẬN PHƯƠNG THỨC");
     }
 
     private void setupEvents() {
-
         btnBack.setOnClickListener(v -> finish());
 
         // Chọn Mua bằng tiền / Trao đổi
         mainMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.radioBuyMoney) {
                 paymentMethodGroup.setVisibility(RadioGroup.VISIBLE);
+                btnProcessPayment.setText("XÁC NHẬN PHƯƠNG THỨC");
             } else if (checkedId == R.id.radioExchange) {
                 paymentMethodGroup.setVisibility(RadioGroup.GONE);
+                btnProcessPayment.setText("TRAO ĐỔI SẢN PHẨM");
             }
         });
 
@@ -84,35 +100,24 @@ public class PaymentActivity extends AppCompatActivity {
 
         // Xử lý nút xác nhận phương thức
         btnProcessPayment.setOnClickListener(v -> {
-            // Trao đổi sản phẩm
             if (radioExchange.isChecked()) {
-                Intent intent = new Intent(PaymentActivity.this, ExchangeActivity.class);
-                startActivity(intent);
+                // Mở màn hình trao đổi sản phẩm
+                openExchangeActivity();
                 return;
             }
 
-            // Mua bằng tiền
             if (radioBuyMoney.isChecked()) {
                 if (radioQR.isChecked()) {
-                    Intent intent = new Intent(PaymentActivity.this, QRPaymentActivity.class);
-                    intent.putExtra("FINAL_TOTAL", totalPrice + shippingFee - discount);
-                    intent.putExtra("QUANTITY", quantity);
-                    intent.putExtra("TOTAL_PRICE", totalPrice);
-                    startActivity(intent);
+                    openQRPaymentActivity();
                 } else if (radioCreditCard.isChecked()) {
-                    Toast.makeText(this, "Thanh toán thẻ đang phát triển", Toast.LENGTH_SHORT).show();
+                    processOrder("banking", false);
                 } else if (radioCOD.isChecked()) {
-                    Intent intent = new Intent(PaymentActivity.this, PaymentSuccessActivity.class);
-                    intent.putExtra("ORDER_TOTAL", totalPrice + shippingFee - discount);
-                    intent.putExtra("PAYMENT_METHOD", "COD");
-                    startActivity(intent);
-                    finish();
+                    processOrder("cash", false);
                 } else {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
 
     // Đảm bảo chỉ 1 RadioButton được chọn
@@ -124,11 +129,94 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void calculateFinalTotal() {
-        int finalTotal = totalPrice + shippingFee - discount;
+        finalTotal = productTotal + shippingFee - discount;
         tvFinalTotal.setText(formatPrice(finalTotal));
     }
 
     private String formatPrice(int price) {
         return String.format("%,dđ", price).replace(",", ".");
+    }
+
+    // THÊM MỚI: Mở QR Payment Activity
+    private void openQRPaymentActivity() {
+        Intent intent = new Intent(this, QRPaymentActivity.class);
+        intent.putExtra("PRODUCT_ID", productId);
+        intent.putExtra("PRODUCT_NAME", productName);
+        intent.putExtra("QUANTITY", quantity);
+        intent.putExtra("TOTAL_PRICE", finalTotal);
+        startActivity(intent);
+    }
+
+    // THÊM MỚI: Mở Exchange Activity
+    private void openExchangeActivity() {
+        Intent intent = new Intent(this, ExchangeActivity.class);
+        intent.putExtra("PRODUCT_ID", productId);
+        intent.putExtra("PRODUCT_NAME", productName);
+        intent.putExtra("QUANTITY", quantity);
+        intent.putExtra("TOTAL_PRICE", finalTotal);
+        startActivity(intent);
+    }
+
+    private void processOrder(String paymentMethod, boolean isExchange) {
+        int userId = 3; // giả lập userId, sau này thay bằng session thật
+
+        // SỬA: Lấy product bằng productId thay vì productName
+        Product product = null;
+        if (productId != -1) {
+            product = databaseHelper.getProductById(productId);
+        } else {
+            // Fallback: tìm bằng tên nếu không có ID
+            product = databaseHelper.getAllProducts()
+                    .stream()
+                    .filter(p -> p.getProductName().equals(productName))
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        if (product == null) {
+            Toast.makeText(this, "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!isExchange && quantity > product.getQuantity()) {
+            Toast.makeText(this, "Số lượng đặt vượt quá tồn kho", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Xác định status
+        String orderType = isExchange ? "exchange" : "normal";
+        String orderStatus;
+        if (paymentMethod.equals("cash") || orderType.equals("exchange")) {
+            orderStatus = "processing"; // chờ duyệt
+        } else {
+            orderStatus = "paid"; // QR / CreditCard
+        }
+
+        // Tạo order
+        Order order = databaseHelper.createOrder(userId, finalTotal, orderType, paymentMethod, orderStatus);
+
+        if (!isExchange) {
+            // Tạo order detail
+            if (productId != -1) {
+                databaseHelper.createOrderDetail(order.getOrderId(), productId, quantity, productTotal);
+            } else {
+                databaseHelper.createOrderDetailByName(order.getOrderId(), productName, quantity, productTotal);
+            }
+
+            // Giảm tồn kho
+            databaseHelper.updateProductQuantity(product.getProductId(), product.getQuantity() - quantity);
+        }
+
+        // Tạo payment
+        databaseHelper.createPayment(order.getOrderId(), paymentMethod, orderStatus.equals("paid") ? "paid" : "pending");
+
+        // Chuyển sang PaymentSuccessActivity
+        Intent intent = new Intent(this, PaymentSuccessActivity.class);
+        intent.putExtra("ORDER_ID", order.getOrderId());
+        intent.putExtra("ORDER_TOTAL", order.getTotalPrice());
+        intent.putExtra("PAYMENT_METHOD", order.getPaymentMethod());
+        intent.putExtra("ORDER_DATE", order.getOrderDate());
+        startActivity(intent);
+        finish();
     }
 }

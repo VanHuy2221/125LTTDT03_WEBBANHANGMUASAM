@@ -19,10 +19,12 @@ public class ProductConfigActivity extends AppCompatActivity {
     private Button btnDecrease, btnIncrease, btnConfirmPurchase;
     private MaterialButtonToggleGroup storageGroup;
 
-    private int basePrice = 0;
+    private String productName;
+    private int basePrice;
     private int quantity = 1;
-    private String productName = "";
-    private int productImageRes = R.drawable.iphone_14_pro_max;
+    private int productImageRes;
+
+    private int finalTotalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,33 +52,26 @@ public class ProductConfigActivity extends AppCompatActivity {
 
     private void loadProductData() {
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("PRODUCT_NAME")) {
-            productName = intent.getStringExtra("PRODUCT_NAME");
-            basePrice = intent.getIntExtra("PRODUCT_PRICE", 0);
-            String description = intent.getStringExtra("PRODUCT_DESCRIPTION");
-            productImageRes = intent.getIntExtra("PRODUCT_IMAGE", R.drawable.iphone_14_pro_max);
+        if (intent == null) return;
 
-            // Cập nhật tên sản phẩm
-            TextView productNameView = findViewById(R.id.productName);
-            if (productNameView != null) {
-                productNameView.setText(productName);
-            }
+        productName = intent.getStringExtra("PRODUCT_NAME");
+        basePrice = intent.getIntExtra("PRODUCT_PRICE", 0);
+        productImageRes = intent.getIntExtra(
+                "PRODUCT_IMAGE",
+                R.drawable.iphone_14_pro_max
+        );
 
-            // Cập nhật giá gốc
-            TextView productPriceView = findViewById(R.id.productPrice);
-            if (productPriceView != null) {
-                productPriceView.setText(formatPrice(basePrice));
-            }
+        TextView productNameView = findViewById(R.id.productName);
+        TextView productPriceView = findViewById(R.id.productPrice);
 
-            // Cập nhật hình ảnh sản phẩm
-            if (productImage != null) {
-                productImage.setImageResource(productImageRes);
-            }
+        productNameView.setText(productName);
+        productPriceView.setText(formatPrice(basePrice));
+        productImage.setImageResource(productImageRes);
 
-            // Cập nhật tổng tiền ban đầu
-            updateTotalPrice();
-        }
+        tvQuantity.setText(String.valueOf(quantity));
+        updateTotalPrice();
     }
+
 
     private void setupEventListeners() {
         // NÚT BACK - QUAY VỀ PRODUCT DETAIL
@@ -119,31 +114,8 @@ public class ProductConfigActivity extends AppCompatActivity {
     }
 
     private void updateTotalPrice() {
-        int totalPrice = basePrice * quantity;
+        finalTotalPrice = basePrice * quantity;
 
-        // Tính thêm phí nếu chọn dung lượng cao hơn
-        if (storageGroup != null) {
-            int checkedButtonId = storageGroup.getCheckedButtonId();
-            if (checkedButtonId == R.id.storage256) {
-                totalPrice += 3000000; // +3 triệu cho 256GB
-            } else if (checkedButtonId == R.id.storage512) {
-                totalPrice += 6000000; // +6 triệu cho 512GB
-            }
-        }
-
-        if (tvTotalPrice != null) {
-            tvTotalPrice.setText(formatPrice(totalPrice));
-        }
-    }
-
-    private String formatPrice(int price) {
-        return String.format("%,dđ", price).replace(",", ".");
-    }
-
-    private void navigateToPayment() {
-        int finalTotalPrice = basePrice * quantity;
-
-        // Tính thêm phí dung lượng cuối cùng
         if (storageGroup != null) {
             int checkedButtonId = storageGroup.getCheckedButtonId();
             if (checkedButtonId == R.id.storage256) {
@@ -153,11 +125,21 @@ public class ProductConfigActivity extends AppCompatActivity {
             }
         }
 
-        // Chuyển sang PaymentActivity
+        tvTotalPrice.setText(formatPrice(finalTotalPrice));
+    }
+
+    private String formatPrice(int price) {
+        return String.format("%,dđ", price).replace(",", ".");
+    }
+
+    private void navigateToPayment() {
+
         Intent paymentIntent = new Intent(this, PaymentActivity.class);
+
+        paymentIntent.putExtra("PRODUCT_NAME", productName);
         paymentIntent.putExtra("QUANTITY", quantity);
         paymentIntent.putExtra("TOTAL_PRICE", finalTotalPrice);
-        paymentIntent.putExtra("PRODUCT_NAME", productName);
+
         startActivity(paymentIntent);
     }
 }

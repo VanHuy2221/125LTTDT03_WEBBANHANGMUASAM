@@ -2,14 +2,26 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bc_quanlibanhangonline.adapters.OrderAdapter;
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.Order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderTrackingActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
+    private RecyclerView recyclerView;
+    private OrderAdapter adapter;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,18 +30,24 @@ public class OrderTrackingActivity extends AppCompatActivity {
 
         bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setSelectedItemId(R.id.nav_order);
-        setupBottomNavigation();
-        setupReviewClickListener();
-    }
+        recyclerView = findViewById(R.id.rv_orders);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-    private void setupReviewClickListener(){
-        View reviewButton = findViewById(R.id.btn_evaluate);
-        reviewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToReview();
+        db = new DatabaseHelper(this);
+
+        List<Order> allOrders = db.getOrdersByUser(3);
+        List<Order> activeOrders = new ArrayList<>();
+
+        for (Order order : allOrders) {
+            if (!"cancelled".equalsIgnoreCase(order.getStatus())) {
+                activeOrders.add(order);
             }
-        });
+        }
+
+        adapter = new OrderAdapter(this, activeOrders, db);
+        recyclerView.setAdapter(adapter);
+
+        setupBottomNavigation();
     }
 
     private void setupBottomNavigation() {

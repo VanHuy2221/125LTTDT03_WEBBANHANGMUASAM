@@ -52,26 +52,16 @@ public class PaymentSuccessActivity extends AppCompatActivity {
     private void displayOrderDetails() {
         // Lấy dữ liệu từ Intent
         Intent intent = getIntent();
-        int orderTotal = intent.getIntExtra("ORDER_TOTAL", 25520000);
+
+        String orderId = intent.getStringExtra("ORDER_ID");
+        String orderDate = intent.getStringExtra("ORDER_DATE");
+        int orderTotal = intent.getIntExtra("ORDER_TOTAL", 0);
         String paymentMethod = intent.getStringExtra("PAYMENT_METHOD");
 
-        // Generate order number
-        String orderNumber = generateOrderNumber();
-        tvOrderNumber.setText(orderNumber);
-
-        // Set current date
-        String currentDate = getCurrentDate();
-        tvOrderDate.setText(currentDate);
-
-        // Set order total
+        tvOrderNumber.setText(orderId);
+        tvOrderDate.setText(orderDate);
         tvOrderTotal.setText(formatPrice(orderTotal));
-
-        // Set payment method
-        if (paymentMethod != null) {
-            tvPaymentMethod.setText(paymentMethod);
-        }
-
-        // Status is always success in this activity
+        tvPaymentMethod.setText(paymentMethod);
         tvOrderStatus.setText("Thành công");
         tvOrderStatus.setTextColor(getColor(android.R.color.holo_green_dark));
     }

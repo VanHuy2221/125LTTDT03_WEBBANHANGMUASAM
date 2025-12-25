@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
 import com.example.bc_quanlibanhangonline.models.Category;
 import com.example.bc_quanlibanhangonline.models.Product;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.widget.Toast;
+
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -47,21 +48,8 @@ public class HomeActivity extends AppCompatActivity {
 
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        // Load thông tin user từ Intent trước (khi từ Login/Register về)
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("USER_ID")) {
-            userId = intent.getIntExtra("USER_ID", -1);
-            userRole = intent.getStringExtra("USER_ROLE");
-            Log.d("HomeActivity", "From Intent - UserID: " + userId + ", Role: " + userRole);
-
-            if (userId != -1) {
-                saveUserToPrefs(userId, userRole);
-            }
-        } else {
-            // Nếu không có từ Intent, lấy từ SharedPreferences
-            loadUserFromPrefs();
-            Log.d("HomeActivity", "From Prefs - UserID: " + userId + ", Role: " + userRole);
-        }
+        // Load thông tin user từ Intent hoặc Prefs
+        loadUserFromIntentOrPrefs();
 
         initViews();
         initDatabase();
@@ -73,6 +61,20 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNav.setSelectedItemId(R.id.nav_home);
         Log.d("HomeActivity", "Setup completed");
+    }
+
+    private void loadUserFromIntentOrPrefs() {
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("USER_ID")) {
+            userId = intent.getIntExtra("USER_ID", -1);
+            userRole = intent.getStringExtra("USER_ROLE");
+            Log.d("HomeActivity", "From Intent - UserID: " + userId + ", Role: " + userRole);
+
+            if (userId != -1) saveUserToPrefs(userId, userRole);
+        } else {
+            loadUserFromPrefs();
+            Log.d("HomeActivity", "From Prefs - UserID: " + userId + ", Role: " + userRole);
+        }
     }
 
     private void initViews() {
@@ -147,67 +149,49 @@ public class HomeActivity extends AppCompatActivity {
             Log.d("HomeActivity", "Bottom nav clicked: " + itemId);
 
             if (itemId == R.id.nav_home) {
+                // Ở home thì chỉ return true
                 return true;
             } else if (itemId == R.id.nav_order) {
-                if (userId == -1) {
-                    // Chưa đăng nhập
-                    Intent intent = new Intent(this, UnProfileActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent orderIntent = new Intent(this, OrderTrackingActivity.class);
-                    orderIntent.putExtra("USER_ID", userId);
-                    orderIntent.putExtra("USER_ROLE", userRole);
-                    startActivity(orderIntent);
-                }
+                navigateWithLoginCheck(OrderTrackingActivity.class);
                 return true;
             } else if (itemId == R.id.nav_cart) {
-                if (userId == -1) {
-                    // Chưa đăng nhập
-                    Intent intent = new Intent(this, UnProfileActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent cartIntent = new Intent(this, CartActivity.class);
-                    cartIntent.putExtra("USER_ID", userId);
-                    startActivity(cartIntent);
-                }
+                navigateWithLoginCheck(CartActivity.class);
                 return true;
             } else if (itemId == R.id.nav_account) {
                 navigateToAccount();
                 return true;
             }
+
             return false;
         });
     }
 
-    private void navigateToAccount() {
-        Log.d("HomeActivity", "navigateToAccount called - UserID: " + userId + ", Role: " + userRole);
+    private void navigateWithLoginCheck(Class<?> targetActivity) {
+        if (userId == -1) {
+            startActivity(new Intent(this, UnProfileActivity.class));
+        } else {
+            Intent intent = new Intent(this, targetActivity);
+            intent.putExtra("USER_ID", userId);
+            intent.putExtra("USER_ROLE", userRole);
+            startActivity(intent);
+        }
+    }
 
+    private void navigateToAccount() {
         try {
             Intent intent;
-
             if (userId == -1) {
-                Log.d("HomeActivity", "User not logged in, going to UnProfileActivity");
                 intent = new Intent(this, UnProfileActivity.class);
             } else if ("admin".equalsIgnoreCase(userRole)) {
-                Log.d("HomeActivity", "User is admin, going to AdminDashboardActivity");
                 intent = new Intent(this, com.example.bc_quanlibanhangonline.admin.AdminDashboardActivity.class);
-                intent.putExtra("USER_ID", userId);
-                intent.putExtra("USER_ROLE", userRole);
             } else if ("seller".equalsIgnoreCase(userRole)) {
-                Log.d("HomeActivity", "User is seller, going to SellerProfileActivity");
                 intent = new Intent(this, SellerProfileActivity.class);
-                intent.putExtra("USER_ID", userId);
-                intent.putExtra("USER_ROLE", userRole);
             } else {
-                Log.d("HomeActivity", "User is customer, going to ProfileActivity");
                 intent = new Intent(this, ProfileActivity.class);
-                intent.putExtra("USER_ID", userId);
-                intent.putExtra("USER_ROLE", userRole);
             }
-
-            Log.d("HomeActivity", "Starting activity: " + intent.getComponent().getClassName());
+            intent.putExtra("USER_ID", userId);
+            intent.putExtra("USER_ROLE", userRole);
             startActivity(intent);
-
         } catch (Exception e) {
             Log.e("HomeActivity", "ERROR in navigateToAccount: " + e.getMessage(), e);
             Toast.makeText(this, "Lỗi chuyển trang", Toast.LENGTH_SHORT).show();

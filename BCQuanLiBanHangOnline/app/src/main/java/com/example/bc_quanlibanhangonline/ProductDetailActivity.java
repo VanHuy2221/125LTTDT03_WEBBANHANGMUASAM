@@ -16,6 +16,11 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productPrice, productDescription;
     private ImageView productImage, btnBack;
 
+    private String currentProductName;
+    private int currentProductPrice;
+    private String currentProductDescription;
+    private int currentProductImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +45,20 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void loadProductData() {
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("PRODUCT_NAME")) {
-            String name = intent.getStringExtra("PRODUCT_NAME");
-            int price = intent.getIntExtra("PRODUCT_PRICE", 0);
-            String description = intent.getStringExtra("PRODUCT_DESCRIPTION");
-            int imageRes = intent.getIntExtra("PRODUCT_IMAGE", R.drawable.iphone_14_pro_max);
+        if (intent == null) return;
 
-            productName.setText(name);
-            productPrice.setText(formatPrice(price));
-            productDescription.setText(description);
-            productImage.setImageResource(imageRes);
-        }
+        currentProductName = intent.getStringExtra("PRODUCT_NAME");
+        currentProductPrice = intent.getIntExtra("PRODUCT_PRICE", 0);
+        currentProductDescription = intent.getStringExtra("PRODUCT_DESCRIPTION");
+        currentProductImage = intent.getIntExtra(
+                "PRODUCT_IMAGE",
+                R.drawable.iphone_14_pro_max
+        );
+
+        productName.setText(currentProductName);
+        productPrice.setText(formatPrice(currentProductPrice));
+        productDescription.setText(currentProductDescription);
+        productImage.setImageResource(currentProductImage);
     }
 
     private String formatPrice(int price) {
@@ -77,25 +85,21 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
-        String productNameText = productName.getText().toString();
-        Toast.makeText(this, "Đã thêm " + productNameText + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                this,
+                "Đã thêm " + currentProductName + " vào giỏ hàng",
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     private void navigateToProductConfig() {
-        // Lấy dữ liệu từ Intent gốc (sản phẩm thực tế người dùng bấm vào)
-        Intent originalIntent = getIntent();
-
-        String productNameText = originalIntent.getStringExtra("PRODUCT_NAME");
-        int productPriceValue = originalIntent.getIntExtra("PRODUCT_PRICE", 0);
-        String productDescriptionText = originalIntent.getStringExtra("PRODUCT_DESCRIPTION");
-        int productImageRes = originalIntent.getIntExtra("PRODUCT_IMAGE", R.drawable.iphone_14_pro_max);
-
-        // Chuyển sang ProductConfigActivity với đúng sản phẩm
         Intent configIntent = new Intent(this, ProductConfigActivity.class);
-        configIntent.putExtra("PRODUCT_NAME", productNameText);
-        configIntent.putExtra("PRODUCT_PRICE", productPriceValue);
-        configIntent.putExtra("PRODUCT_DESCRIPTION", productDescriptionText);
-        configIntent.putExtra("PRODUCT_IMAGE", productImageRes);
+
+        configIntent.putExtra("PRODUCT_NAME", currentProductName);
+        configIntent.putExtra("PRODUCT_PRICE", currentProductPrice);
+        configIntent.putExtra("PRODUCT_DESCRIPTION", currentProductDescription);
+        configIntent.putExtra("PRODUCT_IMAGE", currentProductImage);
+
         startActivity(configIntent);
     }
 }
