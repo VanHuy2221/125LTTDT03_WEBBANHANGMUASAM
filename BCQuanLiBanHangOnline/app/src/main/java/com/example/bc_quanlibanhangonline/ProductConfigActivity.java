@@ -26,6 +26,8 @@ public class ProductConfigActivity extends AppCompatActivity {
 
     private int finalTotalPrice;
 
+    private int userId = -1; // Thêm biến này
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class ProductConfigActivity extends AppCompatActivity {
                 "PRODUCT_IMAGE",
                 R.drawable.iphone_14_pro_max
         );
+
+        userId = intent.getIntExtra("USER_ID", -1);
 
         TextView productNameView = findViewById(R.id.productName);
         TextView productPriceView = findViewById(R.id.productPrice);
@@ -110,7 +114,13 @@ public class ProductConfigActivity extends AppCompatActivity {
         }
 
         // Nút xác nhận mua hàng - CHUYỂN SANG PAYMENT ACTIVITY
-        btnConfirmPurchase.setOnClickListener(v -> navigateToPayment());
+        btnConfirmPurchase.setOnClickListener(v -> {
+            if (userId == -1) {
+                Toast.makeText(this, "Vui lòng đăng nhập để mua sản phẩm", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            navigateToPayment();
+        });
     }
 
     private void updateTotalPrice() {
@@ -139,7 +149,7 @@ public class ProductConfigActivity extends AppCompatActivity {
         paymentIntent.putExtra("PRODUCT_NAME", productName);
         paymentIntent.putExtra("QUANTITY", quantity);
         paymentIntent.putExtra("TOTAL_PRICE", finalTotalPrice);
-
+        paymentIntent.putExtra("USER_ID", userId);
         startActivity(paymentIntent);
     }
 }

@@ -37,6 +37,8 @@ public class PaymentActivity extends AppCompatActivity {
     private final int shippingFee = 30000;
     private final int discount = 500000;
 
+    private int userId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,8 @@ public class PaymentActivity extends AppCompatActivity {
         quantity = intent.getIntExtra("QUANTITY", 1);
         productTotal = intent.getIntExtra("TOTAL_PRICE", 0);
         productName = intent.getStringExtra("PRODUCT_NAME");
+
+        userId = intent.getIntExtra("USER_ID", -1);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -132,7 +136,10 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void processOrder(String paymentMethod, boolean isExchange) {
-        int userId = 3; // giả lập userId, sau này thay bằng session thật
+        if (userId == -1) {
+            Toast.makeText(this, "Vui lòng đăng nhập để mua hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Product product = databaseHelper.getAllProducts()
                 .stream()
@@ -150,36 +157,25 @@ public class PaymentActivity extends AppCompatActivity {
             return;
         }
 
-        // Xác định status
         String orderType = isExchange ? "exchange" : "normal";
-        String orderStatus;
-        if (paymentMethod.equals("cash") || orderType.equals("exchange")) {
-            orderStatus = "processing"; // chờ duyệt
-        } else {
-            orderStatus = "paid"; // QR / CreditCard
-        }
+        String orderStatus = (paymentMethod.equals("cash") || orderType.equals("exchange")) ? "processing" : "paid";
 
-        // Tạo order
         Order order = databaseHelper.createOrder(userId, finalTotal, orderType, paymentMethod, orderStatus);
 
         if (!isExchange) {
-            // Tạo order detail
             databaseHelper.createOrderDetailByName(order.getOrderId(), productName, quantity, productTotal);
-
-            // Giảm tồn kho
             databaseHelper.updateProductQuantity(product.getProductId(), quantity);
         }
 
-        // Tạo payment
         databaseHelper.createPayment(order.getOrderId(), paymentMethod, orderStatus.equals("paid") ? "paid" : "pending");
 
-        // Chuyển sang PaymentSuccessActivity
-        Intent intent = new Intent(this, PaymentSuccessActivity.class);
-        intent.putExtra("ORDER_ID", order.getOrderId());
-        intent.putExtra("ORDER_TOTAL", order.getTotalPrice());
-        intent.putExtra("PAYMENT_METHOD", order.getPaymentMethod());
-        intent.putExtra("ORDER_DATE", order.getOrderDate());
-        startActivity(intent);
+        Intent successIntent = new Intent(this, PaymentSuccessActivity.class);
+        successIntent.putExtra("ORDER_ID", order.getOrderId());
+        successIntent.putExtra("ORDER_TOTAL", order.getTotalPrice());
+        successIntent.putExtra("PAYMENT_METHOD", order.getPaymentMethod());
+        successIntent.putExtra("ORDER_DATE", order.getOrderDate());
+        successIntent.putExtra("USER_ID", userId);
+        startActivity(successIntent);
         finish();
     }
 }

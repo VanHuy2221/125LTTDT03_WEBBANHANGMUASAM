@@ -168,7 +168,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void navigateWithLoginCheck(Class<?> targetActivity) {
         if (userId == -1) {
-            startActivity(new Intent(this, UnProfileActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         } else {
             Intent intent = new Intent(this, targetActivity);
             intent.putExtra("USER_ID", userId);
@@ -192,6 +192,7 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra("USER_ID", userId);
             intent.putExtra("USER_ROLE", userRole);
             startActivity(intent);
+            finish();
         } catch (Exception e) {
             Log.e("HomeActivity", "ERROR in navigateToAccount: " + e.getMessage(), e);
             Toast.makeText(this, "Lỗi chuyển trang", Toast.LENGTH_SHORT).show();

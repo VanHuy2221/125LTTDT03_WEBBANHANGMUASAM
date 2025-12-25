@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,9 @@ public class OrderTrackingActivity extends AppCompatActivity {
     private OrderAdapter adapter;
     private DatabaseHelper db;
 
+    private int userId = -1;
+    private String userRole = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +39,13 @@ public class OrderTrackingActivity extends AppCompatActivity {
 
         db = new DatabaseHelper(this);
 
-        List<Order> allOrders = db.getOrdersByUser(3);
+        Intent intent = getIntent();
+        if (intent != null) {
+            userId = intent.getIntExtra("USER_ID", -1);
+            userRole = intent.getStringExtra("USER_ROLE");
+        }
+
+        List<Order> allOrders = db.getOrdersByUser(userId);
         List<Order> activeOrders = new ArrayList<>();
 
         for (Order order : allOrders) {
@@ -53,27 +63,19 @@ public class OrderTrackingActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
+            Log.d("OrderTrackingActivity", "Bottom nav clicked: " + itemId);
 
             if (itemId == R.id.nav_home) {
-                startActivity(new Intent(this, HomeActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
+                navigateWithLoginCheck(HomeActivity.class);
                 return true;
-
             } else if (itemId == R.id.nav_order) {
-                // 👉 ĐANG Ở ĐƠN HÀNG → KHÔNG LÀM GÌ
+                navigateWithLoginCheck(OrderTrackingActivity.class);
                 return true;
-
             } else if (itemId == R.id.nav_cart) {
-                startActivity(new Intent(this, CartActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
+                navigateWithLoginCheck(CartActivity.class);
                 return true;
-
             } else if (itemId == R.id.nav_account) {
-                startActivity(new Intent(this, ProfileActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
+                navigateToAccount();
                 return true;
             }
 
@@ -81,6 +83,38 @@ public class OrderTrackingActivity extends AppCompatActivity {
         });
     }
 
+    private void navigateWithLoginCheck(Class<?> targetActivity) {
+        if (userId == -1) {
+            startActivity(new Intent(this, UnProfileActivity.class));
+        } else {
+            Intent intent = new Intent(this, targetActivity);
+            intent.putExtra("USER_ID", userId);
+            intent.putExtra("USER_ROLE", userRole);
+            startActivity(intent);
+        }
+    }
+
+    private void navigateToAccount() {
+        try {
+            Intent intent;
+            if (userId == -1) {
+                intent = new Intent(this, UnProfileActivity.class);
+            } else if ("admin".equalsIgnoreCase(userRole)) {
+                intent = new Intent(this, com.example.bc_quanlibanhangonline.admin.AdminDashboardActivity.class);
+            } else if ("seller".equalsIgnoreCase(userRole)) {
+                intent = new Intent(this, SellerProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            } else {
+                intent = new Intent(this, ProfileActivity.class);
+            }
+            intent.putExtra("USER_ID", userId);
+            intent.putExtra("USER_ROLE", userRole);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e("OrderTrackingActivity", "ERROR in navigateToAccount: " + e.getMessage(), e);
+            Toast.makeText(this, "Lỗi chuyển trang", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void navigateToReview(){
         Intent intent = new Intent(OrderTrackingActivity.this, ReviewActivity.class);
