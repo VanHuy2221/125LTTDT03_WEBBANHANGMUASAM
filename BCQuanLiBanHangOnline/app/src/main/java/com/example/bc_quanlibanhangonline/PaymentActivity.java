@@ -18,16 +18,16 @@ import com.example.bc_quanlibanhangonline.models.Product;
 public class PaymentActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private String productName;
+    private int productId = -1;
+    private int userId = -1;
 
     private TextView tvFinalTotal;
     private Button btnProcessPayment;
     private ImageView btnBack;
 
-    // Main method
     private RadioGroup mainMethodGroup;
     private RadioButton radioBuyMoney, radioExchange;
 
-    // Payment methods
     private RadioGroup paymentMethodGroup;
     private RadioButton radioQR, radioCreditCard, radioCOD;
 
@@ -36,8 +36,6 @@ public class PaymentActivity extends AppCompatActivity {
     private int finalTotal;
     private final int shippingFee = 30000;
     private final int discount = 500000;
-
-    private int userId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +46,7 @@ public class PaymentActivity extends AppCompatActivity {
         quantity = intent.getIntExtra("QUANTITY", 1);
         productTotal = intent.getIntExtra("TOTAL_PRICE", 0);
         productName = intent.getStringExtra("PRODUCT_NAME");
-
+        productId = intent.getIntExtra("PRODUCT_ID", -1);
         userId = intent.getIntExtra("USER_ID", -1);
 
         databaseHelper = new DatabaseHelper(this);
@@ -72,45 +70,43 @@ public class PaymentActivity extends AppCompatActivity {
         radioCreditCard = findViewById(R.id.radioCreditCard);
         radioCOD = findViewById(R.id.radioCOD);
 
-        // mặc định
         radioBuyMoney.setChecked(true);
         radioQR.setChecked(true);
         paymentMethodGroup.setVisibility(RadioGroup.VISIBLE);
+
+        btnProcessPayment.setText("XÁC NHẬN PHƯƠNG THỨC");
     }
-
-
 
     private void setupEvents() {
         btnBack.setOnClickListener(v -> finish());
 
-        // Chọn Mua bằng tiền / Trao đổi
         mainMethodGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.radioBuyMoney) {
                 paymentMethodGroup.setVisibility(RadioGroup.VISIBLE);
-            } else if (checkedId == R.id.radioExchange) {
+                btnProcessPayment.setText("XÁC NHẬN PHƯƠNG THỨC");
+            } else {
                 paymentMethodGroup.setVisibility(RadioGroup.GONE);
+                btnProcessPayment.setText("TRAO ĐỔI SẢN PHẨM");
             }
         });
 
-        // Quản lý chọn 1 trong 3 phương thức thanh toán
         radioQR.setOnClickListener(v -> selectPayment(radioQR));
         radioCreditCard.setOnClickListener(v -> selectPayment(radioCreditCard));
         radioCOD.setOnClickListener(v -> selectPayment(radioCOD));
 
-        // Xử lý nút xác nhận phương thức
         btnProcessPayment.setOnClickListener(v -> {
             if (radioExchange.isChecked()) {
-                processOrder("exchange", true); // order trao đổi
+                openExchangeActivity();
                 return;
             }
 
             if (radioBuyMoney.isChecked()) {
                 if (radioQR.isChecked()) {
-                    processOrder("cad", false); // thanh toán QR
+                    openQRPaymentActivity();
                 } else if (radioCreditCard.isChecked()) {
-                    processOrder("banking", false); // thanh toán thẻ
+                    processOrder("banking", false);
                 } else if (radioCOD.isChecked()) {
-                    processOrder("cash", false); // thanh toán khi nhận hàng
+                    processOrder("cash", false);
                 } else {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                 }
@@ -118,7 +114,6 @@ public class PaymentActivity extends AppCompatActivity {
         });
     }
 
-    // Đảm bảo chỉ 1 RadioButton được chọn
     private void selectPayment(RadioButton selected) {
         radioQR.setChecked(false);
         radioCreditCard.setChecked(false);
@@ -128,11 +123,27 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void calculateFinalTotal() {
         finalTotal = productTotal + shippingFee - discount;
-        tvFinalTotal.setText(formatPrice(finalTotal));
+        tvFinalTotal.setText(String.format("%,dđ", finalTotal).replace(",", "."));
     }
 
-    private String formatPrice(int price) {
-        return String.format("%,dđ", price).replace(",", ".");
+    private void openQRPaymentActivity() {
+        Intent intent = new Intent(this, QRPaymentActivity.class);
+        intent.putExtra("PRODUCT_ID", productId);
+        intent.putExtra("PRODUCT_NAME", productName);
+        intent.putExtra("QUANTITY", quantity);
+        intent.putExtra("TOTAL_PRICE", finalTotal);
+        intent.putExtra("USER_ID", userId);
+        startActivity(intent);
+    }
+
+    private void openExchangeActivity() {
+        Intent intent = new Intent(this, ExchangeActivity.class);
+        intent.putExtra("PRODUCT_ID", productId);
+        intent.putExtra("PRODUCT_NAME", productName);
+        intent.putExtra("QUANTITY", quantity);
+        intent.putExtra("TOTAL_PRICE", finalTotal);
+        intent.putExtra("USER_ID", userId);
+        startActivity(intent);
     }
 
     private void processOrder(String paymentMethod, boolean isExchange) {
@@ -141,11 +152,17 @@ public class PaymentActivity extends AppCompatActivity {
             return;
         }
 
-        Product product = databaseHelper.getAllProducts()
-                .stream()
-                .filter(p -> p.getProductName().equals(productName))
-                .findFirst()
-                .orElse(null);
+        Product product = null;
+        if (productId != -1) {
+            product = databaseHelper.getProductById(productId);
+        }
+        if (product == null) {
+            product = databaseHelper.getAllProducts()
+                    .stream()
+                    .filter(p -> p.getProductName().equals(productName))
+                    .findFirst()
+                    .orElse(null);
+        }
 
         if (product == null) {
             Toast.makeText(this, "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
@@ -163,19 +180,19 @@ public class PaymentActivity extends AppCompatActivity {
         Order order = databaseHelper.createOrder(userId, finalTotal, orderType, paymentMethod, orderStatus);
 
         if (!isExchange) {
-            databaseHelper.createOrderDetailByName(order.getOrderId(), productName, quantity, productTotal);
-            databaseHelper.updateProductQuantity(product.getProductId(), quantity);
+            databaseHelper.createOrderDetail(order.getOrderId(), product.getProductId(), quantity, productTotal);
+            databaseHelper.updateProductQuantity(product.getProductId(), product.getQuantity() - quantity);
         }
 
         databaseHelper.createPayment(order.getOrderId(), paymentMethod, orderStatus.equals("paid") ? "paid" : "pending");
 
-        Intent successIntent = new Intent(this, PaymentSuccessActivity.class);
-        successIntent.putExtra("ORDER_ID", order.getOrderId());
-        successIntent.putExtra("ORDER_TOTAL", order.getTotalPrice());
-        successIntent.putExtra("PAYMENT_METHOD", order.getPaymentMethod());
-        successIntent.putExtra("ORDER_DATE", order.getOrderDate());
-        successIntent.putExtra("USER_ID", userId);
-        startActivity(successIntent);
+        Intent intent = new Intent(this, PaymentSuccessActivity.class);
+        intent.putExtra("ORDER_ID", order.getOrderId());
+        intent.putExtra("ORDER_TOTAL", order.getTotalPrice());
+        intent.putExtra("PAYMENT_METHOD", order.getPaymentMethod());
+        intent.putExtra("ORDER_DATE", order.getOrderDate());
+        intent.putExtra("USER_ID", userId);
+        startActivity(intent);
         finish();
     }
 }

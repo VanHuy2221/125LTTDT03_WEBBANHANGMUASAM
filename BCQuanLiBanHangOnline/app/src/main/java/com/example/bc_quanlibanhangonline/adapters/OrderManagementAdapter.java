@@ -73,7 +73,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter<OrderManagement
                 break;
             case "paid":
             case "shipping":
-                holder.txtStatus.setText("Đã thanh toán");
+                holder.txtStatus.setText("Đang giao");
                 holder.txtStatus.setBackgroundColor(Color.parseColor("#4CAF50"));
                 holder.btnApprove.setVisibility(View.GONE);
                 holder.btnReject.setVisibility(View.GONE);
@@ -98,7 +98,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter<OrderManagement
         // ===== Nút duyệt =====
         holder.btnApprove.setOnClickListener(v -> {
             databaseHelper.updateOrderStatus(order.getOrderId(), "paid");
-            order.setStatus("paid");
+            order.setStatus("shipping");
             notifyItemChanged(position);
             Toast.makeText(context, "Đơn hàng đã được duyệt", Toast.LENGTH_SHORT).show();
         });

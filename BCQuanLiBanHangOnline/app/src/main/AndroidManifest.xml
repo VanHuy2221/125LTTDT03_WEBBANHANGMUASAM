@@ -42,6 +42,7 @@
         <activity android:name=".UnProfileActivity" />
         <activity android:name=".admin.AdminDashboardActivity" />
         <activity android:name=".admin.UserManagementActivity" />
+        <activity android:name=".ExchangeSuccessActivity" />
     </application>
 
 </manifest>
