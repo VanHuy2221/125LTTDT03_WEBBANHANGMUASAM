@@ -3,7 +3,6 @@ package com.example.bc_quanlibanhangonline;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bc_quanlibanhangonline.adapters.OrderAdapter;
 import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
+import com.example.bc_quanlibanhangonline.models.ExchangeRequest;
 import com.example.bc_quanlibanhangonline.models.Order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -45,19 +45,48 @@ public class OrderTrackingActivity extends AppCompatActivity {
             userRole = intent.getStringExtra("USER_ROLE");
         }
 
-        List<Order> allOrders = db.getOrdersByUser(userId);
-        List<Order> activeOrders = new ArrayList<>();
+        loadOrdersAndExchanges();
+        setupBottomNavigation();
+    }
 
-        for (Order order : allOrders) {
+    private void loadOrdersAndExchanges() {
+        // Tạo danh sách kết hợp
+        List<Object> combinedList = new ArrayList<>();
+
+        // 1. Lấy đơn hàng của user
+        List<Order> userOrders = db.getOrdersByUser(userId);
+        for (Order order : userOrders) {
+            // Chỉ hiển thị đơn không bị hủy
             if (!"cancelled".equalsIgnoreCase(order.getStatus())) {
-                activeOrders.add(order);
+                combinedList.add(order);
             }
         }
 
-        adapter = new OrderAdapter(this, activeOrders, db);
+        // 2. Lấy yêu cầu trao đổi của user
+        // VÌ ExchangeRequest chưa lưu userId, tạm thời lấy tất cả
+        List<ExchangeRequest> allExchanges = db.getExchangeRequests();
+
+        // Lọc theo userId (trong thực tế cần lưu userId vào ExchangeRequest)
+        for (ExchangeRequest exchange : allExchanges) {
+            // Tạm thời thêm tất cả để test
+            combinedList.add(exchange);
+        }
+
+        // 3. Tạo adapter với danh sách kết hợp
+        adapter = new OrderAdapter(this, combinedList, db);
         recyclerView.setAdapter(adapter);
 
-        setupBottomNavigation();
+        // Kiểm tra nếu không có dữ liệu
+        if (combinedList.isEmpty()) {
+            Toast.makeText(this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh dữ liệu khi quay lại activity
+        loadOrdersAndExchanges();
     }
 
     private void setupBottomNavigation() {
@@ -69,7 +98,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
                 navigateWithLoginCheck(HomeActivity.class);
                 return true;
             } else if (itemId == R.id.nav_order) {
-                navigateWithLoginCheck(OrderTrackingActivity.class);
+                // Đã ở trang order, không cần chuyển
                 return true;
             } else if (itemId == R.id.nav_cart) {
                 navigateWithLoginCheck(CartActivity.class);
@@ -114,10 +143,5 @@ public class OrderTrackingActivity extends AppCompatActivity {
             Log.e("OrderTrackingActivity", "ERROR in navigateToAccount: " + e.getMessage(), e);
             Toast.makeText(this, "Lỗi chuyển trang", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void navigateToReview(){
-        Intent intent = new Intent(OrderTrackingActivity.this, ReviewActivity.class);
-        startActivity(intent);
     }
 }

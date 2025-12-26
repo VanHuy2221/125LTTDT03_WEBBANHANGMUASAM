@@ -25,6 +25,7 @@ public class ProductConfigActivity extends AppCompatActivity {
     private int productImageRes;
 
     private int finalTotalPrice;
+    private int productId;
 
     private int userId = -1; // Thêm biến này
 
@@ -56,6 +57,7 @@ public class ProductConfigActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent == null) return;
 
+        productId = intent.getIntExtra("PRODUCT_ID", -1);
         productName = intent.getStringExtra("PRODUCT_NAME");
         basePrice = intent.getIntExtra("PRODUCT_PRICE", 0);
         productImageRes = intent.getIntExtra(
@@ -146,6 +148,7 @@ public class ProductConfigActivity extends AppCompatActivity {
 
         Intent paymentIntent = new Intent(this, PaymentActivity.class);
 
+        paymentIntent.putExtra("PRODUCT_ID", productId);
         paymentIntent.putExtra("PRODUCT_NAME", productName);
         paymentIntent.putExtra("QUANTITY", quantity);
         paymentIntent.putExtra("TOTAL_PRICE", finalTotalPrice);

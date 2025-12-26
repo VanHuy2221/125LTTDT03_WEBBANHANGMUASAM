@@ -3,6 +3,7 @@ package com.example.bc_quanlibanhangonline;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ChatListActivity extends AppCompatActivity {
@@ -12,7 +13,27 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
+        // Nhận exchangeId nếu có từ các màn hình khác
+        Intent intent = getIntent();
+        String exchangeId = intent.getStringExtra("EXCHANGE_ID");
+
+        // Nếu có exchangeId, mở thẳng ChatDetailActivity
+        if (exchangeId != null) {
+            openChatDetailWithExchange(exchangeId);
+            return; // Không cần hiển thị chat list
+        }
+
         setupChatItemClickListeners();
+    }
+
+    private void openChatDetailWithExchange(String exchangeId) {
+        Intent intent = new Intent(this, ChatDetailActivity.class);
+        intent.putExtra("EXCHANGE_ID", exchangeId);
+        intent.putExtra("SENDER_ID", getIntent().getIntExtra("SENDER_ID", -1));
+        intent.putExtra("RECEIVER_ID", getIntent().getIntExtra("RECEIVER_ID", -1));
+        intent.putExtra("CHAT_TYPE", "exchange");
+        startActivity(intent);
+        finish(); // Đóng ChatListActivity
     }
 
     private void setupChatItemClickListeners() {
@@ -37,7 +58,6 @@ public class ChatListActivity extends AppCompatActivity {
                 navigateToProfile();
             }
         });
-        // Bạn cũng có thể thêm click listeners cho các chat item khác ở đây
     }
 
     private void navigateToChatDetail(String userName, String userInitials,

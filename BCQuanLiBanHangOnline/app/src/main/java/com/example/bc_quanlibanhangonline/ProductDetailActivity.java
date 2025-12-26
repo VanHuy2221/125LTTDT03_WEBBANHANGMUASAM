@@ -2,6 +2,7 @@ package com.example.bc_quanlibanhangonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.bc_quanlibanhangonline.database.DatabaseHelper;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
@@ -21,6 +24,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private String currentProductDescription;
     private int currentProductImage;
 
+    DatabaseHelper db;
+    private int productId;
     private int userId = -1;
 
     @Override
@@ -28,6 +33,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
+        Intent intent = getIntent();
+        int productId = intent.getIntExtra("PRODUCT_ID", -1);
+
+        Log.d("PRODUCT_DETAIL", "productId = " + productId);
+        db = new DatabaseHelper(this);
         initializeViews();
         loadProductData();
         setupEventListeners();
@@ -56,7 +66,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 "PRODUCT_IMAGE",
                 R.drawable.iphone_14_pro_max
         );
-
+        productId = intent.getIntExtra("PRODUCT_ID", -1);
         userId = intent.getIntExtra("USER_ID", -1);
 
         productName.setText(currentProductName);
@@ -78,28 +88,40 @@ public class ProductDetailActivity extends AppCompatActivity {
                     // Tạo Intent quay về HomeActivity
                     Intent intent = new Intent(ProductDetailActivity.this, HomeActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra("USER_ID", userId);
                     startActivity(intent);
                     finish(); // Đóng Activity hiện tại
                 }
             });
         }
 
-        btnAddToCart.setOnClickListener(v -> addToCart());
+        btnAddToCart.setOnClickListener(v -> {
+            Log.d("PRODUCT_DETAIL", "Add to cart productId = " + productId);
+
+            if (productId == -1) {
+                Toast.makeText(this, "Lỗi sản phẩm", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            db.addToCart(userId, productId);
+            Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        });
         btnBuyNow.setOnClickListener(v -> navigateToProductConfig());
     }
 
     private void addToCart() {
-        if(userId == -1){
-            Toast.makeText(this, "Vui lòng đăng nhập để thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        if (userId == -1) {
+            Toast.makeText(this,
+                    "Vui lòng đăng nhập",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Thêm vào DB: db.addToCart(userId, currentProductName, currentProductPrice,...)
-        Toast.makeText(
-                this,
-                "Đã thêm " + currentProductName + " vào giỏ hàng",
-                Toast.LENGTH_SHORT
-        ).show();
+        db.addToCart(userId, productId); // ✅ GỌI DATABASEHELPER
+
+        Toast.makeText(this,
+                "Đã thêm vào giỏ hàng",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void navigateToProductConfig() {

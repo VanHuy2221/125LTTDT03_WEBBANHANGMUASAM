@@ -135,6 +135,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void navigateToProductDetail(Product product) {
         Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+        intent.putExtra("PRODUCT_ID", product.getProductId());
         intent.putExtra("PRODUCT_NAME", product.getProductName());
         intent.putExtra("PRODUCT_PRICE", (int) product.getPrice());
         intent.putExtra("PRODUCT_DESCRIPTION", product.getDescription());

@@ -93,96 +93,15 @@
                 android:textColor="#212121"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- ===== ITEM CARD ===== -->
-            <androidx.cardview.widget.CardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@android:color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="iPhone 14 Pro Max 128GB"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="#212121"
-                        android:layout_marginBottom="8dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="25.990.000đ"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#E53935"/>
-
-                        <!-- COUNTER -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:orientation="horizontal"
-                            android:background="#EEEEEE"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="4dp">
-
-                            <TextView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:text="-"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:textColor="#FFFFFF"
-                                android:gravity="center"
-                                android:background="#2196F3"/>
-
-                            <TextView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:text="1"
-                                android:textSize="14sp"
-                                android:textColor="#000000"
-                                android:gravity="center"/>
-
-                            <TextView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:text="+"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:textColor="#FFFFFF"
-                                android:gravity="center"
-                                android:background="#2196F3"/>
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Xóa"
-                            android:textColor="#E53935"
-                            android:textStyle="bold"
-                            android:layout_marginStart="12dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:padding="16dp"/>
 
             <!-- ===== TOTAL CARD ===== -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/total_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
@@ -210,6 +129,7 @@
                             android:textStyle="bold"/>
 
                         <TextView
+                            android:id="@+id/total_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="32.010.000đ"
@@ -222,9 +142,10 @@
 
             <!-- PAY BUTTON -->
             <Button
+                android:id="@+id/btnCheckout"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="Thanh toán"
+                android:text="Đặt hàng"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"

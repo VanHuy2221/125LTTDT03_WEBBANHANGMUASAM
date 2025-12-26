@@ -62,7 +62,9 @@
             app:tint="#888888"
             android:layout_marginEnd="10dp"/>
 
+        <!-- THÊM ID edtSearch -->
         <EditText
+            android:id="@+id/edtSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -70,7 +72,37 @@
             android:textColor="#333333"
             android:textColorHint="#999999"
             android:background="@null"
-            android:padding="6dp"/>
+            android:padding="6dp"
+            android:imeOptions="actionSearch"/>
+    </LinearLayout>
+
+    <!-- EMPTY STATE (THÊM MỚI) -->
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_cart"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- THÊM ID tvEmptyState -->
+        <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chưa có đơn hàng nào"
+            android:textSize="18sp"
+            android:textColor="#888888"/>
     </LinearLayout>
 
     <!-- RECYCLER VIEW -->

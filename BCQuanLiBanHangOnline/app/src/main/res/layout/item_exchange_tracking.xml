@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#FFF3E0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtExchangeId"
+            android:text="Trao đổi #EX123"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#E65100"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/txtProductName"
+            android:text="Muốn: iPhone 14 Pro Max"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:textColor="#212121"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/txtProductOffer"
+            android:text="Đổi: MacBook Pro M2"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp"
+            android:textColor="#666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/txtTotal"
+            android:text="Giá trị ước tính"
+            android:textStyle="bold"
+            android:textColor="#E53935"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/txtStatus"
+            android:text="Đang chờ phản hồi"
+            android:textColor="#FF9800"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- LinearLayout ngang chứa 2 button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="Hủy trao đổi"
+                android:textColor="#212121"
+                android:backgroundTint="#E0E0E0"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btn_evaluate"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="Xem chi tiết"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#2196F3"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
