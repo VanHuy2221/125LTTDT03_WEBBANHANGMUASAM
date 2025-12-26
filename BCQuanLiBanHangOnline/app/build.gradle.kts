@@ -37,6 +37,10 @@ android {
 
 dependencies {
 
+    implementation("androidx.activity:activity:1.8.0")
+    implementation("androidx.fragment:fragment:1.6.2")
+// Material Components (nếu cần)
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.android.material:material:1.8.0")
     implementation(libs.appcompat)

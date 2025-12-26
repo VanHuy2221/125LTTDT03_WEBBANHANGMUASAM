@@ -1,5 +1,6 @@
 package com.example.bc_quanlibanhangonline.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,10 +44,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Bảng sản phẩm (dùng tạm để join với cart lấy giá)
+        // Bảng sản phẩm - SỬA: product_id tự động tăng
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS products (" +
-                        "product_id INTEGER PRIMARY KEY, " +
+                        "product_id INTEGER PRIMARY KEY AUTOINCREMENT, " + // SỬA Ở ĐÂY
                         "seller_id INTEGER, " +
                         "category_id INTEGER, " +
                         "product_name TEXT, " +
@@ -69,6 +70,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "quantity INTEGER" +
                         ")"
         );
+
+        // Thêm sản phẩm mẫu vào database
+        insertSampleProducts(db);
+    }
+
+    // Phương thức thêm sản phẩm mẫu
+    private void insertSampleProducts(SQLiteDatabase db) {
+        List<Product> sampleProducts = getHardcodedProducts();
+        for (Product p : sampleProducts) {
+            ContentValues values = new ContentValues();
+            values.put("product_id", p.getProductId()); // Giữ ID gốc cho sản phẩm mẫu
+            values.put("seller_id", p.getSellerId());
+            values.put("category_id", p.getCategoryId());
+            values.put("product_name", p.getProductName());
+            values.put("brand", p.getBrand());
+            values.put("price", p.getPrice());
+            values.put("description", p.getDescription());
+            values.put("image_resource", p.getImageResource());
+            values.put("quantity", p.getQuantity());
+            values.put("status", p.getStatus());
+            values.put("rating", p.getRating());
+
+            // Insert với conflict ignore để tránh trùng ID
+            db.insertWithOnConflict("products", null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        }
     }
 
     @Override
@@ -476,5 +502,260 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void clearCartByUser(int userId) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete("cart", "user_id = ?", new String[]{String.valueOf(userId)});
+    }
+
+    public long addProduct(Product product) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // KHÔNG tự tạo ID - để database tự động tăng
+        // values.put("product_id", ...); // BỎ DÒNG NÀY
+
+        values.put("seller_id", product.getSellerId());
+        values.put("category_id", product.getCategoryId());
+        values.put("product_name", product.getProductName());
+        values.put("brand", product.getBrand());
+        values.put("price", product.getPrice());
+        values.put("description", product.getDescription());
+        values.put("image_resource", product.getImageResource());
+        values.put("quantity", product.getQuantity());
+        values.put("status", product.getStatus());
+        values.put("rating", product.getRating());
+
+        long id = db.insert("products", null, values);
+        Log.d("DBDebug", "addProduct() - inserted ID: " + id);
+        db.close();
+
+        // Set lại productId cho đối tượng
+        if (id != -1) {
+            product.setProductId((int) id);
+        }
+
+        return id;
+    }
+
+    private int generateNewProductId() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT MAX(product_id) FROM products", null);
+        int maxId = 1000; // Bắt đầu từ 1000 để tránh trùng
+
+        if (cursor.moveToFirst() && !cursor.isNull(0)) {
+            maxId = cursor.getInt(0);
+            Log.d("DBDebug", "Current max ID: " + maxId);
+        } else {
+            Log.d("DBDebug", "Không có sản phẩm nào, bắt đầu từ 1000");
+        }
+
+        cursor.close();
+        db.close();
+
+        return maxId >= 1000 ? maxId + 1 : 1000;
+    }
+
+    public int updateProduct(Product product) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("seller_id", product.getSellerId());
+        values.put("category_id", product.getCategoryId());
+        values.put("product_name", product.getProductName());
+        values.put("brand", product.getBrand());
+        values.put("price", product.getPrice());
+        values.put("description", product.getDescription());
+        values.put("image_resource", product.getImageResource());
+        values.put("quantity", product.getQuantity());
+        values.put("status", product.getStatus());
+        values.put("rating", product.getRating());
+
+        int rows = db.update("products", values, "product_id = ?", new String[]{String.valueOf(product.getProductId())});
+        db.close();
+        return rows;
+    }
+
+    public Product getProductByProductId(int productId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM products WHERE product_id = ?", new String[]{String.valueOf(productId)});
+        Product product = null;
+        if(cursor.moveToFirst()){
+            product = new Product(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("product_id")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("seller_id")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("category_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("product_name")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("brand")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("price")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("description")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("image_resource")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("quantity")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("status")),
+                    cursor.getFloat(cursor.getColumnIndexOrThrow("rating"))
+            );
+        }
+        cursor.close();
+        db.close();
+        return product;
+    }
+
+    public List<Product> getAllProductsFromDB() {
+        List<Product> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Log để xem có mở được database không
+        Log.d("DBDebug", "Đang mở database để đọc sản phẩm");
+
+        Cursor cursor = db.rawQuery("SELECT * FROM products", null);
+
+        Log.d("DBDebug", "Số dòng từ cursor: " + cursor.getCount());
+
+        if(cursor.moveToFirst()){
+            do{
+                try {
+                    Product product = new Product(
+                            cursor.getInt(cursor.getColumnIndexOrThrow("product_id")),
+                            cursor.getInt(cursor.getColumnIndexOrThrow("seller_id")),
+                            cursor.getInt(cursor.getColumnIndexOrThrow("category_id")),
+                            cursor.getString(cursor.getColumnIndexOrThrow("product_name")),
+                            cursor.getString(cursor.getColumnIndexOrThrow("brand")),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow("price")),
+                            cursor.getString(cursor.getColumnIndexOrThrow("description")),
+                            cursor.getInt(cursor.getColumnIndexOrThrow("image_resource")),
+                            cursor.getInt(cursor.getColumnIndexOrThrow("quantity")),
+                            cursor.getString(cursor.getColumnIndexOrThrow("status")),
+                            cursor.getFloat(cursor.getColumnIndexOrThrow("rating"))
+                    );
+                    list.add(product);
+                    Log.d("DBDebug", "Đã đọc sản phẩm: " + product.getProductName());
+                } catch (Exception e) {
+                    Log.e("DBDebug", "Lỗi khi đọc sản phẩm từ cursor: " + e.getMessage());
+                }
+            } while(cursor.moveToNext());
+        } else {
+            Log.d("DBDebug", "Không có sản phẩm nào trong database");
+        }
+
+        cursor.close();
+        db.close();
+
+        Log.d("DBDebug", "Tổng số sản phẩm từ DB: " + list.size());
+        return list;
+    }
+
+    public int deleteProduct(int productId){
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete("products", "product_id = ?", new String[]{String.valueOf(productId)});
+    }
+
+    public void insertSampleProductsToDB() {
+        // Xóa các sản phẩm cũ để test
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("products", null, null);
+
+        // Thêm một số sản phẩm mẫu
+        List<Product> sampleProducts = getAllProducts(); // Lấy từ hardcode
+        for (Product p : sampleProducts) {
+            ContentValues values = new ContentValues();
+            values.put("product_id", p.getProductId());
+            values.put("seller_id", p.getSellerId());
+            values.put("category_id", p.getCategoryId());
+            values.put("product_name", p.getProductName());
+            values.put("brand", p.getBrand());
+            values.put("price", p.getPrice());
+            values.put("description", p.getDescription());
+            values.put("image_resource", p.getImageResource());
+            values.put("quantity", p.getQuantity());
+            values.put("status", p.getStatus());
+            values.put("rating", p.getRating());
+
+            db.insert("products", null, values);
+        }
+        db.close();
+    }
+
+    public List<Product> getHardcodedProducts() {
+        // Trả về danh sách sản phẩm cứng
+        return getAllProducts(); // Phương thức hiện tại
+    }
+
+    public List<Product> getUserProductsFromDB() {
+        // Trả về sản phẩm từ SQLite
+        return getAllProductsFromDB();
+    }
+
+    public List<Product> getAllProductsMerged() {
+        List<Product> mergedList = new ArrayList<>();
+
+        // Sản phẩm cứng
+        List<Product> hardcoded = getHardcodedProducts();
+        if (hardcoded != null) {
+            mergedList.addAll(hardcoded);
+        }
+
+        // Sản phẩm từ database
+        List<Product> fromDB = getUserProductsFromDB();
+        if (fromDB != null) {
+            // Đảm bảo không trùng ID
+            for (Product dbProduct : fromDB) {
+                boolean exists = false;
+                for (Product existing : mergedList) {
+                    if (existing.getProductId() == dbProduct.getProductId()) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    mergedList.add(dbProduct);
+                }
+            }
+        }
+
+        return mergedList;
+    }
+
+    public Product getProductByIdCombined(int productId) {
+        // Thử tìm trong database trước
+        Product product = getProductByProductId(productId);
+        if (product != null) {
+            return product;
+        }
+
+        // Nếu không có trong DB, tìm trong hardcoded
+        for (Product p : getHardcodedProducts()) {
+            if (p.getProductId() == productId) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    public List<Product> getAllProductsCombined() {
+        List<Product> allProducts = new ArrayList<>();
+
+        // 1. Lấy sản phẩm từ SQLite (do người dùng thêm)
+        List<Product> dbProducts = getAllProductsFromDB();
+        if (dbProducts != null && !dbProducts.isEmpty()) {
+            allProducts.addAll(dbProducts);
+        }
+
+        // 2. Lấy sản phẩm cứng (hardcoded)
+        List<Product> hardcodedProducts = getAllProducts(); // Phương thức hardcoded cũ
+        if (hardcodedProducts != null && !hardcodedProducts.isEmpty()) {
+            // Kiểm tra trùng lặp (dựa vào productId hoặc tên sản phẩm)
+            for (Product hardcoded : hardcodedProducts) {
+                boolean isDuplicate = false;
+                for (Product dbProduct : allProducts) {
+                    // Kiểm tra trùng productId hoặc tên
+                    if (dbProduct.getProductId() == hardcoded.getProductId() ||
+                            dbProduct.getProductName().equals(hardcoded.getProductName())) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                if (!isDuplicate) {
+                    allProducts.add(hardcoded);
+                }
+            }
+        }
+
+        return allProducts;
     }
 }

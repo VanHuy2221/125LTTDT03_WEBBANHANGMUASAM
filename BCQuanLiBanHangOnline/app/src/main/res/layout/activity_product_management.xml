@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:elevation="4dp"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <!-- Nút quay lại -->
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Quay lại"
+                android:padding="8dp"
+                android:tint="#1A1A1A" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Quản lý sản phẩm"
+                android:textSize="20sp"
+                android:textColor="#1A1A1A"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+
+        <!-- Progress Bar (nếu cần) -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:max="100"
+            android:progress="0"
+            android:visibility="gone"
+            android:progressTint="#2196F3"
+            android:progressBackgroundTint="#E0E0E0" />
+
+    </LinearLayout>
+
+    <!-- Floating Action Button (GIỮ NGUYÊN ID) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="Thêm sản phẩm"
+        android:backgroundTint="#2196F3" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -90,7 +90,7 @@ public class SellerProfileActivity extends AppCompatActivity {
 
     private void setupFeatureClicks() {
         cardProductList.setOnClickListener(v -> {
-            Intent intent = new Intent(this, OrderManagementActivity.class);
+            Intent intent = new Intent(this, ProductManagementActivity.class);
             startActivity(intent);
         });
 

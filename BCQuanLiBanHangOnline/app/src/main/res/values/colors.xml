@@ -69,4 +69,7 @@
     <color name="green_500">#4CAF50</color>
     <color name="orange_500">#FF9800</color>
     <color name="purple_500">#9C27B0</color>
+    <color name="red_500">#F44336</color>
+
+    <color name="icon_gray">#666666</color>
 </resources>
