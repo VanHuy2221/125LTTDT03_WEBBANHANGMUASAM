@@ -132,6 +132,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         configIntent.putExtra("PRODUCT_DESCRIPTION", currentProductDescription);
         configIntent.putExtra("PRODUCT_IMAGE", currentProductImage);
         configIntent.putExtra("USER_ID", userId);
+        configIntent.putExtra("PRODUCT_ID", productId);
         startActivity(configIntent);
     }
 }

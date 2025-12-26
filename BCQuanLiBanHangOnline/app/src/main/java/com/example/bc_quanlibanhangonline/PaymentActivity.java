@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class PaymentActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private String productName;
-    private int productId = -1;
+    private int productId;
     private int userId = -1;
 
     private TextView tvFinalTotal;
